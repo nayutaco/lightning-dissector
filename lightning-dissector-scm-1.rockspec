@@ -24,6 +24,8 @@ build = {
     type = "builtin",
     modules = {
         ["lightning-dissector.wireshark-plugin"] = "wireshark-plugin.lua",
-        ["lightning-dissector.decryptor"] = "decryptor.lua"
+        ["lightning-dissector.decryptor"] = "decryptor.lua",
+        ["lightning-dissector.key"] = "key.lua",
+        ["lightning-dissector.frame-analyzer"] = "frame-analyzer.lua"
     }
 }
