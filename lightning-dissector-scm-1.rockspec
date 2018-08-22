@@ -29,6 +29,7 @@ build = {
         ["lightning-dissector.key"] = "key.lua",
         ["lightning-dissector.frame-analyzer"] = "frame-analyzer.lua",
         ["lightning-dissector.deserializers.init"] = "deserializers/init.lua",
+        ["lightning-dissector.deserializers.ping"] = "deserializers/ping.lua",
         ["lightning-dissector.utils.reader"] = "utils/reader.lua"
     }
 }

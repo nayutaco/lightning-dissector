@@ -9,7 +9,8 @@ local frame_analyzer = FrameAnalyzer:new(decryptor_for_send)
 
 function find_deserializer_for(type)
   local deserializers = {
-    require("lightning-dissector.deserializers.init"):new()
+    require("lightning-dissector.deserializers.init"):new(),
+    require("lightning-dissector.deserializers.ping"):new()
   }
 
   for _, deserializer in pairs(deserializers) do
