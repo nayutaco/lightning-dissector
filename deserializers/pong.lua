@@ -1,25 +1,23 @@
 local class = require "middleclass"
 local Reader = require "lightning-dissector.utils.reader"
 
-local PingDeserializer = class("PingDeserializer")
+local PongDeserializer = class("PongDeserializer")
 
-function PingDeserializer:initialize()
-  self.number = 18
-  self.name = "ping"
+function PongDeserializer:initialize()
+  self.number = 19
+  self.name = "pong"
 end
 
-function PingDeserializer:deserialize(payload)
+function PongDeserializer:deserialize(payload)
   local reader = Reader:new(payload)
 
-  local num_pong_bytes = string.unpack(">I2", reader:read(2))
   local byteslen = string.unpack(">I2", reader:read(2))
   local ignored = string.unpack(">I" .. byteslen, reader:read(byteslen))
 
   return {
-    num_pong_bytes = num_pong_bytes,
     byteslen = byteslen,
     ignored = ignored
   }
 end
 
-return PingDeserializer
+return PongDeserializer
