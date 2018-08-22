@@ -23,7 +23,10 @@ function FrameAnalyzer:_analyze(buffer)
   self.decryptor:transaction(function()
     packed_encrypted_len = buffer():raw(0, 2)
     packed_decrypted_len = self.decryptor:decrypt(packed_encrypted_len)
-    packed_encrypted_msg = buffer():raw(18)
+    local decrypted_len = string.unpack(">I2", packed_decrypted_len)
+
+    -- if out of range occurs here, key/nonce may be incorrect
+    packed_encrypted_msg = buffer():raw(18, decrypted_len)
     packed_decrypted_msg = self.decryptor:decrypt(packed_encrypted_msg)
   end)
 
