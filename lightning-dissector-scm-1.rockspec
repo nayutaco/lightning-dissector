@@ -17,7 +17,8 @@ description = {
 dependencies = { 
     "lua == 5.2",
     "lrexlib-pcre == 2.9.0",
-    "compat53 == 0.7"
+    "compat53 == 0.7",
+    "inspect == 3.1.1"
 }
 
 build = {
@@ -26,6 +27,8 @@ build = {
         ["lightning-dissector.wireshark-plugin"] = "wireshark-plugin.lua",
         ["lightning-dissector.decryptor"] = "decryptor.lua",
         ["lightning-dissector.key"] = "key.lua",
-        ["lightning-dissector.frame-analyzer"] = "frame-analyzer.lua"
+        ["lightning-dissector.frame-analyzer"] = "frame-analyzer.lua",
+        ["lightning-dissector.deserializers.init"] = "deserializers/init.lua",
+        ["lightning-dissector.utils.reader"] = "utils/reader.lua"
     }
 }
