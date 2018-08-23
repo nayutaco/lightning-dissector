@@ -11,7 +11,8 @@ function find_deserializer_for(type)
   local deserializers = {
     require("lightning-dissector.deserializers.init"):new(),
     require("lightning-dissector.deserializers.ping"):new(),
-    require("lightning-dissector.deserializers.pong"):new()
+    require("lightning-dissector.deserializers.pong"):new(),
+    require("lightning-dissector.deserializers.error"):new()
   }
 
   for _, deserializer in pairs(deserializers) do
