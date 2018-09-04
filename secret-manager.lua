@@ -61,22 +61,44 @@ function KeyLogManager:find_packed_key(packed_mac)
   return bin.hextos(key)
 end
 
-local SecretManagers = class("SecretManagers", SecretManager)
+local CompositeSecretManager = class("CompositeSecretManager", SecretManager)
 
-function SecretManagers:initialize(...)
+function CompositeSecretManager:initialize(...)
   self.secret_managers = table.pack(...)
 end
 
-function SecretManagers:find_secret(pinfo, buffer)
+function CompositeSecretManager:find_secret(pinfo, buffer)
   for _, secret_manager in fun.iter(self.secret_managers) do
     return secret_manager:find_secret(pinfo, buffer)
   end
+end
+
+local SecretCache = class("SecretCache", SecretManager)
+
+function SecretCache:initialize(secret_manager)
+  self.secret_manager = secret_manager
+  self.secrets = {}
+end
+
+function SecretCache:find_secret(pinfo, buffer)
+  if self.secrets[pinfo.number] ~= nil then
+    return self.secrets[pinfo.number]:clone()
+  end
+
+  local new_secret = self.secret_manager:find_secret(pinfo, buffer)
+  if new_secret == nil then
+    error("key/nonce not found")
+  end
+
+  self.secrets[pinfo.number] = new_secret:clone()
+  return new_secret
 end
 
 -- TODO:
 local EclairSecretManager = class("EclairSecretManager", SecretManager)
 
 return {
-  SecretManagers = SecretManagers,
+  SecretCache = SecretCache,
+  CompositeSecretManager = CompositeSecretManager,
   KeyLogManager = KeyLogManager
 }

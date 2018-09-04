@@ -1,25 +1,50 @@
 local class = require "middleclass"
+local bin = require "plc.bin"
+
+local function find_deserializer_for(type)
+  local deserializers = {
+    require("lightning-dissector.deserializers.init"):new(),
+    require("lightning-dissector.deserializers.ping"):new(),
+    require("lightning-dissector.deserializers.pong"):new(),
+    require("lightning-dissector.deserializers.error"):new()
+  }
+
+  for _, deserializer in pairs(deserializers) do
+    if deserializer.number == type then
+      return deserializer
+    end
+  end
+end
+
+local function deserialize(packed_msg)
+  local packed_type = packed_msg:sub(1, 2)
+  local type = string.unpack(">I2", packed_type)
+  local payload = packed_msg:sub(3)
+
+  local deserializer = find_deserializer_for(type)
+  local deserialized = deserializer:deserialize(payload)
+
+  local result = {
+    Type = {
+      Raw = bin.stohex(packed_type),
+      Deserialized = deserializer.name
+    }
+  }
+  for key, value in pairs(deserialized) do
+    result[key] = value
+  end
+
+  return result
+end
 
 local FrameAnalyzer = class("FrameAnalyzer")
 
 function FrameAnalyzer:initialize(secret_manager)
   self.secret_manager = secret_manager
-  self.analyzed_frames = {}
 end
 
 function FrameAnalyzer:analyze(pinfo, buffer)
-  if self.analyzed_frames[pinfo.number] == nil then
-    self.analyzed_frames[pinfo.number] = self:_analyze(pinfo, buffer)
-  end
-
-  return self.analyzed_frames[pinfo.number]
-end
-
-function FrameAnalyzer:_analyze(pinfo, buffer)
   local secret = self.secret_manager:find_secret(pinfo, buffer)
-  if secret == nil then
-    error("key/nonce not found")
-  end
 
   local packed_encrypted_len = buffer():raw(0, 2)
   local packed_len_mac = buffer():raw(2, 16)
@@ -31,12 +56,25 @@ function FrameAnalyzer:_analyze(pinfo, buffer)
   local packed_decrypted_msg = secret:decrypt(packed_encrypted_msg, packed_msg_mac)
 
   return {
-    packed_key = secret:packed_key(),
-    packed_nonce = secret:packed_nonce(),
-    packed_encrypted_len = packed_encrypted_len,
-    packed_decrypted_len = packed_decrypted_len,
-    packed_encrypted_msg = packed_encrypted_msg,
-    packed_decrypted_msg = packed_decrypted_msg
+    Secret = {
+      Key = bin.stohex(secret:packed_key()),
+      Nonce = {
+        Raw = bin.stohex(secret:packed_nonce()),
+        Deserialized = secret:nonce()
+      }
+    },
+    Length = {
+      Encrypted = bin.stohex(packed_encrypted_len),
+      MAC = bin.stohex(packed_len_mac),
+      Decrypted = bin.stohex(packed_decrypted_len),
+      Deserialized = decrypted_len
+    },
+    Message = {
+      Encrypted = bin.stohex(packed_encrypted_msg),
+      MAC = bin.stohex(packed_msg_mac),
+      Decrypted = bin.stohex(packed_decrypted_msg),
+      Deserialized = deserialize(packed_decrypted_msg)
+    }
   }
 end
 

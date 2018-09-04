@@ -48,4 +48,13 @@ function Secret:decrypt(packed_msg, packed_mac)
   return decrypted
 end
 
+function Secret:clone()
+  local clone = {
+    _packed_key = self._packed_key,
+    _nonce = self._nonce
+  }
+
+  return setmetatable(clone, {__index = self})
+end
+
 return Secret

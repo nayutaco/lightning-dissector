@@ -12,12 +12,16 @@ end
 function PongDeserializer:deserialize(payload)
   local reader = Reader:new(payload)
 
-  local byteslen = string.unpack(">I2", reader:read(2))
-  local ignored = bin.stohex(reader:read(byteslen))
+  local packed_byteslen = reader:read(2)
+  local byteslen = string.unpack(">I2", packed_byteslen)
+  local packed_ignored = reader:read(byteslen)
 
   return {
-    byteslen = byteslen,
-    ignored = ignored
+    byteslen = {
+      Raw = bin.stohex(packed_byteslen),
+      Deserialized = byteslen
+    },
+    ignored = bin.stohex(packed_ignored)
   }
 end
 

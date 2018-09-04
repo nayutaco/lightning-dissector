@@ -23,9 +23,11 @@ function InitDeserializer:deserialize(payload)
 
   local reader = Reader:new(payload)
 
-  local gflen = string.unpack(">I2", reader:read(2))
+  local packed_gflen = reader:read(2)
+  local gflen = string.unpack(">I2", packed_gflen)
   local packed_global_features = reader:read(gflen)
-  local lflen = string.unpack(">I2", reader:read(2))
+  local packed_lflen = reader:read(2)
+  local lflen = string.unpack(">I2", packed_lflen)
   local packed_local_features = reader:read(lflen)
   local local_features = string.unpack(">I" .. lflen, packed_local_features)
 
@@ -46,12 +48,22 @@ function InitDeserializer:deserialize(payload)
   end
 
   return {
-    gflen = gflen,
+    gflen = {
+      Raw = bin.stohex(packed_gflen),
+      Deserialized = gflen
+    },
     global_features = bin.stohex(packed_global_features),
-    lflen = lflen,
-    local_features = bin.stohex(packed_local_features),
-    optional_features = inspect(optional_features),
-    required_features = inspect(required_features),
+    lflen = {
+      Raw = bin.stohex(packed_lflen),
+      Deserialized = lflen
+    },
+    local_features = {
+      Raw = bin.stohex(packed_local_features),
+      Deserialized = {
+        Optional = inspect(optional_features),
+        Required = inspect(required_features)
+      }
+    }
   }
 end
 

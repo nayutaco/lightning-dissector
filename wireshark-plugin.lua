@@ -1,25 +1,24 @@
 local bin = require "plc.bin"
-local SecretManagers = require("lightning-dissector.secret-manager").SecretManagers
+local SecretCache = require("lightning-dissector.secret-manager").SecretCache
+local CompositeSecretManager = require("lightning-dissector.secret-manager").CompositeSecretManager
 local KeyLogManager = require("lightning-dissector.secret-manager").KeyLogManager
 local FrameAnalyzer = require "lightning-dissector.frame-analyzer"
 
-local secret_manager = SecretManagers:new(
-  KeyLogManager:new()
-  -- TODO: Add EclairSecretManager
+local frame_analyzer = FrameAnalyzer:new(
+  SecretCache:new(
+    CompositeSecretManager:new(
+      KeyLogManager:new()
+    )
+  )
 )
-local frame_analyzer = FrameAnalyzer:new(secret_manager)
 
-function find_deserializer_for(type)
-  local deserializers = {
-    require("lightning-dissector.deserializers.init"):new(),
-    require("lightning-dissector.deserializers.ping"):new(),
-    require("lightning-dissector.deserializers.pong"):new(),
-    require("lightning-dissector.deserializers.error"):new()
-  }
-
-  for _, deserializer in pairs(deserializers) do
-    if deserializer.number == type then
-      return deserializer
+local function display(tree, analyzed_frame)
+  for key, value in pairs(analyzed_frame) do
+    if type(value) == "table" then
+      local subtree = tree:add(key .. ":")
+      display(subtree, value)
+    else
+      tree:add(key .. ": " .. value)
     end
   end
 end
@@ -33,33 +32,8 @@ function protocol.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Lightning Network"
 
   local analyzed_frame = frame_analyzer:analyze(pinfo, buffer)
-
   local subtree = tree:add(protocol, "Lightning Network")
-
-  local secret_tree = subtree:add("Secret:")
-  secret_tree:add("Key: " .. bin.stohex(analyzed_frame.packed_key))
-  secret_tree:add("Nonce: " .. bin.stohex(analyzed_frame.packed_nonce))
-
-  local length_tree = subtree:add("Length:")
-  length_tree:add("Encrypted: " .. bin.stohex(analyzed_frame.packed_encrypted_len))
-  length_tree:add("Decrypted: " .. bin.stohex(analyzed_frame.packed_decrypted_len))
-  length_tree:add("Deserialized: " .. string.unpack(">I2", analyzed_frame.packed_decrypted_len))
-
-  local message_tree = subtree:add("Message:")
-  message_tree:add("Encrypted: " .. bin.stohex(analyzed_frame.packed_encrypted_msg))
-  message_tree:add("Decrypted: " .. bin.stohex(analyzed_frame.packed_decrypted_msg))
-  local deserialized_tree = message_tree:add("Deserialized")
-
-  local type = string.unpack(">I2", analyzed_frame.packed_decrypted_msg:sub(1, 2))
-  local payload = analyzed_frame.packed_decrypted_msg:sub(3)
-  local deserializer = find_deserializer_for(type)
-  local deserialized = deserializer:deserialize(payload)
-
-  deserialized_tree:add("type: " .. deserializer.name)
-
-  for key, value in pairs(deserialized) do
-    deserialized_tree:add(key .. ": " .. value)
-  end
+  display(subtree, analyzed_frame)
 end
 
 DissectorTable.get("tcp.port"):add(9000, protocol)
