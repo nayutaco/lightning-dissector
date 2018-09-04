@@ -34,23 +34,31 @@ function protocol.dissector(buffer, pinfo, tree)
 
   local analyzed_frame = frame_analyzer:analyze(pinfo, buffer)
 
-  local subtree = tree:add(protocol, buffer(), "Lightning Network")
-  subtree:add("key: " .. bin.stohex(analyzed_frame.packed_key))
-  subtree:add("nonce: " .. bin.stohex(analyzed_frame.packed_nonce))
-  subtree:add("encrypted_len: " .. bin.stohex(analyzed_frame.packed_encrypted_len))
-  subtree:add("decrypted_len: " .. bin.stohex(analyzed_frame.packed_decrypted_len))
-  subtree:add("encrypted_msg: " .. bin.stohex(analyzed_frame.packed_encrypted_msg))
-  subtree:add("decrypted_msg: " .. bin.stohex(analyzed_frame.packed_decrypted_msg))
+  local subtree = tree:add(protocol, "Lightning Network")
+
+  local secret_tree = subtree:add("Secret:")
+  secret_tree:add("Key: " .. bin.stohex(analyzed_frame.packed_key))
+  secret_tree:add("Nonce: " .. bin.stohex(analyzed_frame.packed_nonce))
+
+  local length_tree = subtree:add("Length:")
+  length_tree:add("Encrypted: " .. bin.stohex(analyzed_frame.packed_encrypted_len))
+  length_tree:add("Decrypted: " .. bin.stohex(analyzed_frame.packed_decrypted_len))
+  length_tree:add("Deserialized: " .. string.unpack(">I2", analyzed_frame.packed_decrypted_len))
+
+  local message_tree = subtree:add("Message:")
+  message_tree:add("Encrypted: " .. bin.stohex(analyzed_frame.packed_encrypted_msg))
+  message_tree:add("Decrypted: " .. bin.stohex(analyzed_frame.packed_decrypted_msg))
+  local deserialized_tree = message_tree:add("Deserialized")
 
   local type = string.unpack(">I2", analyzed_frame.packed_decrypted_msg:sub(1, 2))
   local payload = analyzed_frame.packed_decrypted_msg:sub(3)
   local deserializer = find_deserializer_for(type)
   local deserialized = deserializer:deserialize(payload)
 
-  subtree:add("type: " .. deserializer.name)
+  deserialized_tree:add("type: " .. deserializer.name)
 
   for key, value in pairs(deserialized) do
-    subtree:add(key .. ": " .. value)
+    deserialized_tree:add(key .. ": " .. value)
   end
 end
 
