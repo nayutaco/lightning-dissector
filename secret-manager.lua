@@ -40,8 +40,7 @@ function KeyLogManager:find_packed_key(packed_mac)
 
   local log_path = os.getenv("LIGHTNINGKEYLOGFILE")
   if log_path == nil then
-    debug("$LIGHTNINGKEYLOGFILE isn't set")
-    return
+    log_path = os.getenv("HOME") .. "/.cache/lightning-dissector/keys.log"
   end
 
   local log_file = io.open(log_path)
