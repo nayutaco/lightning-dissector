@@ -1,5 +1,7 @@
 local class = require "middleclass"
 local bin = require "plc.bin"
+local fun = require "fun"
+local rex = require "rex_pcre"
 local Secret = require "lightning-dissector.secret"
 
 -- just an interface
@@ -16,9 +18,9 @@ function KeyLogManager:initialize()
 end
 
 function KeyLogManager:find_secret(pinfo, buffer)
-  local host = pinfo.dst .. ":" .. pinfo.dst_port
+  local host = tostring(pinfo.dst) .. ":" .. pinfo.dst_port
 
-  if self.secrets[host] ~= nil then
+  if self.secrets[host] ~= nil and 1000 > self.secrets[host]:nonce() then
     return self.secrets[host]
   end
 
@@ -62,17 +64,13 @@ end
 
 local SecretManagers = class("SecretManagers", SecretManager)
 
-function SecretManagers:initialize(secret_managers)
-  self.secret_managers = secret_managers
+function SecretManagers:initialize(...)
+  self.secret_managers = table.pack(...)
 end
 
 function SecretManagers:find_secret(pinfo, buffer)
-  for secret_manager in fun.iter(self.secret_managers) do
-    local secret = secret_manager:find_secret(pinfo, buffer)
-
-    if secret ~= nil then
-      return secret
-    end
+  for _, secret_manager in fun.iter(self.secret_managers) do
+    return secret_manager:find_secret(pinfo, buffer)
   end
 end
 

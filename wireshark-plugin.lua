@@ -1,11 +1,13 @@
 local bin = require "plc.bin"
-local key = require "lightning-dissector.key"
-local Decryptor = require "lightning-dissector.decryptor"
+local SecretManagers = require("lightning-dissector.secret-manager").SecretManagers
+local KeyLogManager = require("lightning-dissector.secret-manager").KeyLogManager
 local FrameAnalyzer = require "lightning-dissector.frame-analyzer"
 
-local key_for_send = key.PtarmKey:new(true)
-local decryptor_for_send = Decryptor:new(key_for_send)
-local frame_analyzer = FrameAnalyzer:new(decryptor_for_send)
+local secret_manager = SecretManagers:new(
+  KeyLogManager:new()
+  -- TODO: Add EclairSecretManager
+)
+local frame_analyzer = FrameAnalyzer:new(secret_manager)
 
 function find_deserializer_for(type)
   local deserializers = {
@@ -30,7 +32,7 @@ function protocol.dissector(buffer, pinfo, tree)
 
   pinfo.cols.protocol = "Lightning Network"
 
-  local analyzed_frame = frame_analyzer:analyze(buffer, pinfo)
+  local analyzed_frame = frame_analyzer:analyze(pinfo, buffer)
 
   local subtree = tree:add(protocol, buffer(), "Lightning Network")
   subtree:add("key: " .. bin.stohex(analyzed_frame.packed_key))
