@@ -44,7 +44,7 @@ function KeyLogManager:find_packed_key(packed_mac)
 
   local log_file = io.open(log_path)
   if log_file == nil then
-    debug("$LIGHTNINGKEYLOGFILE refers to non-existent file")
+    critical("$LIGHTNINGKEYLOGFILE refers to non-existent file")
     return
   end
 
@@ -53,7 +53,7 @@ function KeyLogManager:find_packed_key(packed_mac)
 
   local key = rex.match(log, mac .. " ([0-9a-f]+)")
   if key == nil then
-    debug("Encountered nonce=0 message, but the new key not found")
+    warn("Encountered nonce=0 message, but the new key not found. Still in handshake phase?")
     return
   end
 
