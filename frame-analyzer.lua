@@ -7,7 +7,8 @@ local function find_deserializer_for(type)
     require("lightning-dissector.deserializers.ping"):new(),
     require("lightning-dissector.deserializers.pong"):new(),
     require("lightning-dissector.deserializers.error"):new(),
-    require("lightning-dissector.deserializers.channel-announcement"):new()
+    require("lightning-dissector.deserializers.channel-announcement"):new(),
+    require("lightning-dissector.deserializers.channel-update"):new()
   }
 
   for _, deserializer in pairs(deserializers) do
