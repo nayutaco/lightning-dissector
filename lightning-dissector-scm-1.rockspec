@@ -32,6 +32,7 @@ build = {
         ["lightning-dissector.deserializers.ping"] = "deserializers/ping.lua",
         ["lightning-dissector.deserializers.pong"] = "deserializers/pong.lua",
         ["lightning-dissector.deserializers.error"] = "deserializers/error.lua",
+        ["lightning-dissector.deserializers.channel-announcement"] = "deserializers/channel-announcement.lua",
         ["lightning-dissector.utils.reader"] = "utils/reader.lua"
     }
 }
