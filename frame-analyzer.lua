@@ -45,6 +45,9 @@ end
 
 function FrameAnalyzer:analyze(pinfo, buffer)
   local secret = self.secret_manager:find_secret(pinfo, buffer)
+  if secret == nil then
+    error("key/nonce not found")
+  end
 
   local packed_encrypted_len = buffer():raw(0, 2)
   local packed_len_mac = buffer():raw(2, 16)

@@ -1,6 +1,5 @@
 local class = require "middleclass"
 local bin = require "plc.bin"
-local fun = require "fun"
 local rex = require "rex_pcre"
 local Secret = require "lightning-dissector.secret"
 
@@ -68,7 +67,7 @@ function CompositeSecretManager:initialize(...)
 end
 
 function CompositeSecretManager:find_secret(pinfo, buffer)
-  for _, secret_manager in fun.iter(self.secret_managers) do
+  for _, secret_manager in pairs(self.secret_managers) do
     return secret_manager:find_secret(pinfo, buffer)
   end
 end
@@ -81,17 +80,16 @@ function SecretCache:initialize(secret_manager)
 end
 
 function SecretCache:find_secret(pinfo, buffer)
-  if self.secrets[pinfo.number] ~= nil then
-    return self.secrets[pinfo.number]:clone()
+  local secret_for_frame = self.secrets[pinfo.number]
+  if secret_for_frame ~= nil then
+    return secret_for_frame:clone()
   end
 
-  local new_secret = self.secret_manager:find_secret(pinfo, buffer)
-  if new_secret == nil then
-    error("key/nonce not found")
+  local secret_for_node = self.secret_manager:find_secret(pinfo, buffer)
+  if secret_for_node ~= nil then
+    self.secrets[pinfo.number] = secret_for_node:clone()
+    return secret_for_node
   end
-
-  self.secrets[pinfo.number] = new_secret:clone()
-  return new_secret
 end
 
 -- TODO:

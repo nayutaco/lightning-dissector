@@ -1,4 +1,3 @@
-local bin = require "plc.bin"
 local SecretCache = require("lightning-dissector.secret-manager").SecretCache
 local CompositeSecretManager = require("lightning-dissector.secret-manager").CompositeSecretManager
 local KeyLogManager = require("lightning-dissector.secret-manager").KeyLogManager
