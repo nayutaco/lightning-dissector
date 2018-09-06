@@ -55,6 +55,8 @@ function FrameAnalyzer:analyze(pinfo, buffer)
     error("key/nonce not found")
   end
 
+  local secret_before_decryption = secret:clone()
+
   local packed_encrypted_len = buffer():raw(0, 2)
   local packed_len_mac = buffer():raw(2, 16)
   local packed_decrypted_len = secret:decrypt(packed_encrypted_len, packed_len_mac)
@@ -66,10 +68,10 @@ function FrameAnalyzer:analyze(pinfo, buffer)
 
   return {
     Secret = {
-      Key = bin.stohex(secret:packed_key()),
+      Key = bin.stohex(secret_before_decryption:packed_key()),
       Nonce = {
-        Raw = bin.stohex(secret:packed_nonce()),
-        Deserialized = secret:nonce()
+        Raw = bin.stohex(secret_before_decryption:packed_nonce()),
+        Deserialized = secret_before_decryption:nonce()
       }
     },
     Length = {
