@@ -24,10 +24,6 @@ end
 
 local protocol = Proto("lightning", "Lightning Network")
 function protocol.dissector(buffer, pinfo, tree)
-  if pinfo.dst_port ~= 9000 then
-    return
-  end
-
   pinfo.cols.protocol = "Lightning Network"
 
   local analyzed_frame = frame_analyzer:analyze(pinfo, buffer)
