@@ -63,7 +63,8 @@ function FrameAnalyzer:analyze(pinfo, buffer)
   local decrypted_len = string.unpack(">I2", packed_decrypted_len)
 
   local packed_encrypted_msg = buffer:raw(18, decrypted_len)
-  local packed_msg_mac = buffer:raw(18 + decrypted_len)
+  local packed_msg_mac = buffer:raw(18 + decrypted_len, 16)
+
   local packed_decrypted_msg = secret:decrypt(packed_encrypted_msg, packed_msg_mac)
 
   return {
