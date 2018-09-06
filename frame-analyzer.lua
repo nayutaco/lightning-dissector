@@ -21,15 +21,21 @@ local function deserialize(packed_msg)
   local type = string.unpack(">I2", packed_type)
   local payload = packed_msg:sub(3)
 
-  local deserializer = find_deserializer_for(type)
-  local deserialized = deserializer:deserialize(payload)
-
   local result = {
     Type = {
       Raw = bin.stohex(packed_type),
-      Deserialized = deserializer.name
+      Number = type
     }
   }
+
+  local deserializer = find_deserializer_for(type)
+  if deserializer == nil then
+    return result
+  end
+
+  result.Type.Name = deserializer.name
+
+  local deserialized = deserializer:deserialize(payload)
   for key, value in pairs(deserialized) do
     result[key] = value
   end
