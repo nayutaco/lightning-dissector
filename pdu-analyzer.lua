@@ -45,13 +45,13 @@ local function deserialize(packed_msg)
   return result
 end
 
-local FrameAnalyzer = class("FrameAnalyzer")
+local PduAnalyzer = class("PduAnalyzer")
 
-function FrameAnalyzer:initialize(secret_manager)
+function PduAnalyzer:initialize(secret_manager)
   self.secret_manager = secret_manager
 end
 
-function FrameAnalyzer:analyze(pinfo, buffer)
+function PduAnalyzer:analyze(pinfo, buffer)
   local secret = self.secret_manager:find_secret(pinfo, buffer)
   if secret == nil then
     error("key/nonce not found")
@@ -92,4 +92,4 @@ function FrameAnalyzer:analyze(pinfo, buffer)
   }
 end
 
-return FrameAnalyzer
+return PduAnalyzer

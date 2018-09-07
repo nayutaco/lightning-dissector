@@ -1,9 +1,9 @@
 local SecretCache = require("lightning-dissector.secret-manager").SecretCache
 local CompositeSecretManager = require("lightning-dissector.secret-manager").CompositeSecretManager
 local KeyLogManager = require("lightning-dissector.secret-manager").KeyLogManager
-local FrameAnalyzer = require "lightning-dissector.frame-analyzer"
+local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
 
-local frame_analyzer = FrameAnalyzer:new(
+local pdu_analyzer = PduAnalyzer:new(
   SecretCache:new(
     CompositeSecretManager:new(
       KeyLogManager:new()
@@ -26,7 +26,7 @@ local protocol = Proto("lightning", "Lightning Network")
 function protocol.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Lightning Network"
 
-  local analyzed_frame = frame_analyzer:analyze(pinfo, buffer)
+  local analyzed_frame = pdu_analyzer:analyze(pinfo, buffer)
   local subtree = tree:add(protocol, "Lightning Network")
   display(subtree, analyzed_frame)
 end
