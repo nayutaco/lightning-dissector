@@ -52,10 +52,7 @@ function PduAnalyzer:initialize(secret_manager)
 end
 
 function PduAnalyzer:analyze(pinfo, buffer)
-  local secret = self.secret_manager:find_secret(pinfo, buffer)
-  if secret == nil then
-    error("key/nonce not found")
-  end
+  local secret = self.secret_manager:find_secret_or_abort(pinfo, buffer)
 
   local secret_before_decryption = secret:clone()
 

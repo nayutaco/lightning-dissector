@@ -3,11 +3,20 @@ local bin = require "plc.bin"
 local rex = require "rex_pcre"
 local Secret = require "lightning-dissector.secret"
 
--- just an interface
 local SecretManager = class("SecretManager")
 
 function SecretManager:find_secret(pinfo, buffer)
   error("Not implemented")
+end
+
+function SecretManager:find_secret_or_abort(pinfo, buffer)
+  local secret = self:find_secret(pinfo, buffer)
+
+  if secret == nil then
+    error("key/nonce not found")
+  end
+
+  return secret
 end
 
 local KeyLogManager = class("KeyLogManager", SecretManager)
