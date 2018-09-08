@@ -26,9 +26,17 @@ local protocol = Proto("lightning", "Lightning Network")
 function protocol.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Lightning Network"
 
-  local analyzed_frame = pdu_analyzer:analyze(pinfo, buffer)
-  local subtree = tree:add(protocol, "Lightning Network")
-  display(subtree, analyzed_frame)
+  local offset = 0
+  while offset < buffer:len() do
+    local analyzed_pdu = pdu_analyzer:analyze(pinfo, buffer(offset):tvb())
+
+    local header_length = 18
+    local footer_length = 16
+    offset = offset + header_length + analyzed_pdu.Length.Deserialized + footer_length
+
+    local subtree = tree:add(protocol, "Lightning Network")
+    display(subtree, analyzed_pdu)
+  end
 end
 
 DissectorTable.get("tcp.port"):add(9000, protocol)
