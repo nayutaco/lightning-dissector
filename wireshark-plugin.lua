@@ -39,4 +39,4 @@ function protocol.dissector(buffer, pinfo, tree)
   end
 end
 
-DissectorTable.get("tcp.port"):add(9000, protocol)
+DissectorTable.get("tcp.port"):add(9735, protocol)
