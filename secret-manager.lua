@@ -89,14 +89,16 @@ function SecretCache:initialize(secret_manager)
 end
 
 function SecretCache:find_secret(pinfo, buffer)
-  local secret_for_frame = self.secrets[pinfo.number]
-  if secret_for_frame ~= nil then
-    return secret_for_frame:clone()
+  local length_mac = buffer:raw(2, 16)
+
+  local secret_for_pdu = self.secrets[length_mac]
+  if secret_for_pdu ~= nil then
+    return secret_for_pdu:clone()
   end
 
   local secret_for_node = self.secret_manager:find_secret(pinfo, buffer)
   if secret_for_node ~= nil then
-    self.secrets[pinfo.number] = secret_for_node:clone()
+    self.secrets[length_mac] = secret_for_node:clone()
     return secret_for_node
   end
 end
