@@ -1,16 +1,16 @@
 local class = require "middleclass"
 local bin = require "plc.bin"
 
-local function find_deserializer_for(type)
-  local deserializers = {
-    require("lightning-dissector.deserializers.init"):new(),
-    require("lightning-dissector.deserializers.ping"):new(),
-    require("lightning-dissector.deserializers.pong"):new(),
-    require("lightning-dissector.deserializers.error"):new(),
-    require("lightning-dissector.deserializers.channel-announcement"):new(),
-    require("lightning-dissector.deserializers.channel-update"):new()
-  }
+local deserializers = {
+  require("lightning-dissector.deserializers.init"):new(),
+  require("lightning-dissector.deserializers.ping"):new(),
+  require("lightning-dissector.deserializers.pong"):new(),
+  require("lightning-dissector.deserializers.error"):new(),
+  require("lightning-dissector.deserializers.channel-announcement"):new(),
+  require("lightning-dissector.deserializers.channel-update"):new()
+}
 
+local function find_deserializer_for(type)
   for _, deserializer in pairs(deserializers) do
     if deserializer.number == type then
       return deserializer
