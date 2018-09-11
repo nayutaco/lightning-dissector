@@ -15,4 +15,8 @@ function Reader:read(how_many)
   return result
 end
 
+function Reader:is_finished()
+  return self.payload:len() <= self.offset
+end
+
 return Reader

@@ -18,7 +18,8 @@ dependencies = {
     "lua == 5.2",
     "lrexlib-pcre == 2.9.0",
     "compat53 == 0.7",
-    "inspect == 3.1.1"
+    "inspect == 3.1.1",
+    "basexx == 0.4.0"
 }
 
 build = {

@@ -7,7 +7,8 @@ local deserializers = {
   require("lightning-dissector.deserializers.pong"):new(),
   require("lightning-dissector.deserializers.error"):new(),
   require("lightning-dissector.deserializers.channel-announcement"):new(),
-  require("lightning-dissector.deserializers.channel-update"):new()
+  require("lightning-dissector.deserializers.channel-update"):new(),
+  require("lightning-dissector.deserializers.node-announcement"):new()
 }
 
 local function find_deserializer_for(type)
