@@ -76,8 +76,12 @@ function CompositeSecretManager:initialize(...)
 end
 
 function CompositeSecretManager:find_secret(pinfo, buffer)
-  for _, secret_manager in pairs(self.secret_managers) do
-    return secret_manager:find_secret(pinfo, buffer)
+  for _, secret_manager in ipairs(self.secret_managers) do
+    local secret = secret_manager:find_secret(pinfo, buffer)
+  
+    if secret ~= nil then
+      return secret
+    end
   end
 end
 
