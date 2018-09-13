@@ -34,6 +34,12 @@ function KeyLogManager:find_secret(pinfo, buffer)
 end
 
 function KeyLogManager:find_packed_key(packed_mac)
+  error("Not implemented")
+end
+
+local PtarmSecretManager = class("PtarmSecretManager", KeyLogManager)
+
+function PtarmSecretManager:find_packed_key(packed_mac)
   local mac = bin.stohex(packed_mac)
 
   local log_path = os.getenv("LIGHTNINGKEYLOGFILE")
@@ -109,5 +115,5 @@ local EclairSecretManager = class("EclairSecretManager", SecretManager)
 return {
   SecretCache = SecretCache,
   CompositeSecretManager = CompositeSecretManager,
-  KeyLogManager = KeyLogManager
+  PtarmSecretManager = PtarmSecretManager,
 }

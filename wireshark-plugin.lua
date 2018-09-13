@@ -1,12 +1,12 @@
 local SecretCache = require("lightning-dissector.secret-manager").SecretCache
 local CompositeSecretManager = require("lightning-dissector.secret-manager").CompositeSecretManager
-local KeyLogManager = require("lightning-dissector.secret-manager").KeyLogManager
+local PtarmSecretManager = require("lightning-dissector.secret-manager").PtarmSecretManager
 local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
 
 local pdu_analyzer = PduAnalyzer:new(
   SecretCache:new(
     CompositeSecretManager:new(
-      KeyLogManager:new()
+      PtarmSecretManager:new()
     )
   )
 )
