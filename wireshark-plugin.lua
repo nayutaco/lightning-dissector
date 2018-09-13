@@ -1,3 +1,9 @@
+package.path = os.getenv("HOME")
+  .. "/.luarocks/share/lua/5.2/?.lua;"
+  .. os.getenv("HOME")
+  .. "/.luarocks/share/lua/5.2/?/init.lua;"
+  .. package.path
+
 local SecretCache = require("lightning-dissector.secret-manager").SecretCache
 local CompositeSecretManager = require("lightning-dissector.secret-manager").CompositeSecretManager
 local PtarmSecretManager = require("lightning-dissector.secret-manager").PtarmSecretManager
