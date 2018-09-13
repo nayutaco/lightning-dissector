@@ -30,9 +30,14 @@ function protocol.dissector(buffer, pinfo, tree)
   while offset < buffer:len() do
     local analyzed_pdu = pdu_analyzer:analyze(pinfo, buffer(offset):tvb())
 
-    local header_length = 18
-    local footer_length = 16
-    offset = offset + header_length + analyzed_pdu.Length.Deserialized + footer_length
+    -- TODO: Refactoring
+    if analyzed_pdu.Length == nil then
+      offset = buffer:len()
+    else
+      local header_length = 18
+      local footer_length = 16
+      offset = offset + header_length + analyzed_pdu.Length.Deserialized + footer_length
+    end
 
     local subtree = tree:add(protocol, "Lightning Network")
     display(subtree, analyzed_pdu)

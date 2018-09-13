@@ -9,16 +9,6 @@ function SecretManager:find_secret(pinfo, buffer)
   error("Not implemented")
 end
 
-function SecretManager:find_secret_or_abort(pinfo, buffer)
-  local secret = self:find_secret(pinfo, buffer)
-
-  if secret == nil then
-    error("key/nonce not found")
-  end
-
-  return secret
-end
-
 local KeyLogManager = class("KeyLogManager", SecretManager)
 
 function KeyLogManager:initialize()
@@ -78,7 +68,7 @@ end
 function CompositeSecretManager:find_secret(pinfo, buffer)
   for _, secret_manager in ipairs(self.secret_managers) do
     local secret = secret_manager:find_secret(pinfo, buffer)
-  
+
     if secret ~= nil then
       return secret
     end
@@ -94,8 +84,12 @@ end
 
 function SecretCache:find_secret(pinfo, buffer)
   local length_mac = buffer:raw(2, 16)
-
   local secret_for_pdu = self.secrets[length_mac]
+
+  if secret_for_pdu == "NOT FOUND" then
+    return
+  end
+
   if secret_for_pdu ~= nil then
     return secret_for_pdu:clone()
   end
@@ -105,6 +99,8 @@ function SecretCache:find_secret(pinfo, buffer)
     self.secrets[length_mac] = secret_for_node:clone()
     return secret_for_node
   end
+
+  self.secrets[length_mac] = "NOT FOUND"
 end
 
 -- TODO:

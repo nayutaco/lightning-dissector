@@ -53,7 +53,13 @@ function PduAnalyzer:initialize(secret_manager)
 end
 
 function PduAnalyzer:analyze(pinfo, buffer)
-  local secret = self.secret_manager:find_secret_or_abort(pinfo, buffer)
+  local secret = self.secret_manager:find_secret(pinfo, buffer)
+  if secret == nil then
+    return {
+      Phase = "Handshake",
+      Note = "Handshake never ends? Be sure that you correctly configured lightning-dissector by Wireshark's settings panel."
+    }
+  end
 
   local secret_before_decryption = secret:clone()
 
