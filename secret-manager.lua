@@ -65,6 +65,37 @@ function PtarmSecretManager:find_packed_key(packed_mac)
   return bin.hextos(key)
 end
 
+local EclairSecretManager = class("EclairSecretManager", KeyLogManager)
+
+function EclairSecretManager:find_packed_key(packed_mac)
+  local mac = bin.stohex(packed_mac)
+
+  local log_path = os.getenv("ECLAIRLOGFILE")
+  if log_path == nil then
+    log_path = os.getenv("HOME") .. "/.eclair/eclair.log"
+  end
+
+  local log_file = io.open(log_path)
+  if log_file == nil then
+    critical("$ECLAIRLOGFILE refers to non-existent file")
+    return
+  end
+
+  -- FIXME: This line causes wireshark freeze when reading big log. any way to solve?
+  local log = log_file:read("*all")
+  log_file:close()
+
+  local pattern = "encrypt\\(([0-9a-f]+), .+ = .+" .. mac .. "\\)|decrypt\\(([0-9a-f]+), .+, " .. mac .. "\\) ="
+  local sk, rk = rex.match(log, pattern)
+  local key = sk or rk
+
+  if key then
+    return bin.hextos(key)
+  end
+
+  warn("Encountered nonce=0 message, but the new key not found. Still in handshake phase?")
+end
+
 local CompositeSecretManager = class("CompositeSecretManager", SecretManager)
 
 function CompositeSecretManager:initialize(...)
@@ -109,11 +140,9 @@ function SecretCache:find_secret(pinfo, buffer)
   self.secrets[length_mac] = "NOT FOUND"
 end
 
--- TODO:
-local EclairSecretManager = class("EclairSecretManager", SecretManager)
-
 return {
   SecretCache = SecretCache,
   CompositeSecretManager = CompositeSecretManager,
   PtarmSecretManager = PtarmSecretManager,
+  EclairSecretManager = EclairSecretManager
 }
