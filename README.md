@@ -21,14 +21,18 @@ lightning-dissector searches debug log for decryption key.
 sed -i 's/<root level="INFO">/<root level="DEBUG">/' eclair-node/src/main/resources/logback.xml
 ```
 
+You can set location for the debug log by `Edit Menu -> Preferences -> Protocols -> LIGHTNING`. (~/.eclair/eclair.log by default)
+
 ### Ptarmigan
 Set `$LIGHTNINGKEYLOGFILE` before starting ptarmigan.  
-lightning-dissector searches that file for decryption key.
+ptarmigan dumps decryption keys to there.
 
 ```bash
 mkdir ~/.cache/lightning-dissector
 export LIGHTNINGKEYLOGFILE=~/.cache/lightning-dissector/keys.log 
 ```
+
+You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Ptarmigan key file` preference same. (~/.cache/lightning-dissector/keys.log by default)
 
 ## Status
 ### Limitation
