@@ -39,15 +39,15 @@ end
 
 local PtarmSecretManager = class("PtarmSecretManager", KeyLogManager)
 
+function PtarmSecretManager:initialize(log_path)
+  KeyLogManager.initialize(self)
+  self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
+end
+
 function PtarmSecretManager:find_packed_key(packed_mac)
   local mac = bin.stohex(packed_mac)
 
-  local log_path = os.getenv("LIGHTNINGKEYLOGFILE")
-  if log_path == nil then
-    log_path = os.getenv("HOME") .. "/.cache/lightning-dissector/keys.log"
-  end
-
-  local log_file = io.open(log_path)
+  local log_file = io.open(self.log_path)
   if log_file == nil then
     critical("$LIGHTNINGKEYLOGFILE refers to non-existent file")
     return
@@ -67,15 +67,15 @@ end
 
 local EclairSecretManager = class("EclairSecretManager", KeyLogManager)
 
+function EclairSecretManager:initialize(log_path)
+  KeyLogManager.initialize(self)
+  self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
+end
+
 function EclairSecretManager:find_packed_key(packed_mac)
   local mac = bin.stohex(packed_mac)
 
-  local log_path = os.getenv("ECLAIRLOGFILE")
-  if log_path == nil then
-    log_path = os.getenv("HOME") .. "/.eclair/eclair.log"
-  end
-
-  local log_file = io.open(log_path)
+  local log_file = io.open(self.log_path)
   if log_file == nil then
     critical("$ECLAIRLOGFILE refers to non-existent file")
     return

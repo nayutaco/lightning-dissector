@@ -10,11 +10,16 @@ local PtarmSecretManager = require("lightning-dissector.secret-manager").PtarmSe
 local EclairSecretManager = require("lightning-dissector.secret-manager").EclairSecretManager
 local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
 
+local protocol = Proto("LIGHTNING", "Lightning Network")
+protocol.prefs.ptarmigan_key_path = Pref.string("Ptarmigan key log file", "~/.cache/lightning-dissector/keys.log")
+protocol.prefs.eclair_key_path = Pref.string("Eclair log file", "~/.eclair/eclair.log")
+protocol.prefs.note = Pref.statictext("Restart Wireshark to let changes take effect.")
+
 local pdu_analyzer = PduAnalyzer:new(
   SecretCache:new(
     CompositeSecretManager:new(
-      PtarmSecretManager:new(),
-      EclairSecretManager:new()
+      PtarmSecretManager:new(protocol.prefs.ptarmigan_key_path),
+      EclairSecretManager:new(protocol.prefs.eclair_key_path)
     )
   )
 )
@@ -30,7 +35,6 @@ local function display(tree, analyzed_frame)
   end
 end
 
-local protocol = Proto("LIGHTNING", "Lightning Network")
 function protocol.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Lightning Network"
 
