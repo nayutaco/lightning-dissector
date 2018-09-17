@@ -11,7 +11,7 @@ description = {
     A wireshark plugin to analyze communication between lightning network nodes
   ]],
   homepage = "https://github.com/nayutaco/lightning-dissector",
-  license = "MIT",
+  license = "MIT"
 }
 
 dependencies = { 
