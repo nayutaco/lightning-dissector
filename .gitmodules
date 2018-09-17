@@ -1,0 +1,4 @@
+[submodule "plc"]
+	path = plc
+	url = https://github.com/nayutaco/plc.git
+	branch = lua5.2
