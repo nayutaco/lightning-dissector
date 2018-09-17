@@ -2,15 +2,15 @@ package = "lightning-dissector"
 version = "scm-1"
 
 source = {
-    url = "git://github.com/tock203/lightning-dissector.git",
+    url = "git://github.com/nayutaco/lightning-dissector.git",
 }
 
 description = {
     summary = "Lightning Dissector",
     detailed = [[
-        A wireshark plugin to analyze communication between lightning network nodes.
+        A wireshark plugin to analyze communication between lightning network nodes
     ]],
-    homepage = "https://github.com/tock203/lightning-dissector",
+    homepage = "https://github.com/nayutaco/lightning-dissector",
     license = "MIT",
 }
 
