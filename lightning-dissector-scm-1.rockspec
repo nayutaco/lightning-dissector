@@ -19,7 +19,8 @@ dependencies = {
     "lrexlib-pcre == 2.9.0",
     "compat53 == 0.7",
     "inspect == 3.1.1",
-    "basexx == 0.4.0"
+    "basexx == 0.4.0",
+    "poly1305 == 1.0"
 }
 
 build = {
