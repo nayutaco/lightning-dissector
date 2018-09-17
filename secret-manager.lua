@@ -1,5 +1,5 @@
 local class = require "middleclass"
-local bin = require "plc.bin"
+local bin = require "plc52.bin"
 local rex = require "rex_pcre"
 local Secret = require "lightning-dissector.secret"
 

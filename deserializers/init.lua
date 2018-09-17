@@ -1,5 +1,5 @@
 local class = require "middleclass"
-local bin = require "plc.bin"
+local bin = require "plc52.bin"
 local inspect = require "inspect"
 local Reader = require "lightning-dissector.utils.reader"
 

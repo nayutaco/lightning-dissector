@@ -1,5 +1,5 @@
 local class = require "middleclass"
-local chacha20 = require "plc.chacha20"
+local chacha20 = require "plc52.chacha20"
 local poly1305 = require "poly1305"
 
 local function pad16(s)
