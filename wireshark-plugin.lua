@@ -30,7 +30,7 @@ local function display(tree, analyzed_frame)
   end
 end
 
-local protocol = Proto("lightning", "Lightning Network")
+local protocol = Proto("LIGHTNING", "Lightning Network")
 function protocol.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Lightning Network"
 
