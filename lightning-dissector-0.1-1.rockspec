@@ -6,10 +6,7 @@ source = {
 }
 
 description = {
-  summary = "Lightning Dissector",
-  detailed = [[
-    A wireshark plugin to analyze communication between lightning network nodes
-  ]],
+  summary = "A wireshark plugin to analyze communication between lightning network nodes",
   homepage = "https://github.com/nayutaco/lightning-dissector",
   license = "MIT"
 }
