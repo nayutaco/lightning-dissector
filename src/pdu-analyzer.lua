@@ -56,8 +56,7 @@ function PduAnalyzer:analyze(pinfo, buffer)
   local secret = self.secret_manager:find_secret(pinfo, buffer)
   if secret == nil then
     return {
-      Phase = "Handshake",
-      Note = "Handshake never ends? Be sure that you correctly configured lightning-dissector by Wireshark's settings panel."
+      Note = "Decryption key not found. maybe still in handshake phase."
     }
   end
 
