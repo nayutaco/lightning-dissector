@@ -30,7 +30,7 @@ mkdir ~/.cache/lightning-dissector
 export LIGHTNINGKEYLOGFILE=~/.cache/lightning-dissector/keys.log 
 ```
 
-You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Ptarmigan key file` preference same. (~/.cache/lightning-dissector/keys.log by default)
+You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Ptarmigan key file` preference same. (~/.cache/lightning-dissector/ptarmigan-keys.log by default)
 
 ## Status
 ### Limitation

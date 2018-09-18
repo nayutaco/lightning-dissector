@@ -11,7 +11,7 @@ local EclairSecretManager = require("lightning-dissector.secret-manager").Eclair
 local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
-protocol.prefs.ptarmigan_key_path = Pref.string("Ptarmigan key log file", "~/.cache/lightning-dissector/keys.log")
+protocol.prefs.ptarmigan_key_path = Pref.string("Ptarmigan key file", "~/.cache/lightning-dissector/ptarmigan-keys.log")
 protocol.prefs.eclair_key_path = Pref.string("Eclair log file", "~/.eclair/eclair.log")
 protocol.prefs.note = Pref.statictext("Restart Wireshark to let changes take effect.")
 
