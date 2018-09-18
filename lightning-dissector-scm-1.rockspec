@@ -33,6 +33,7 @@ build = {
     ["lightning-dissector.deserializers.error"] = "src/deserializers/error.lua",
     ["lightning-dissector.deserializers.channel-announcement"] = "src/deserializers/channel-announcement.lua",
     ["lightning-dissector.deserializers.channel-update"] = "src/deserializers/channel-update.lua",
+    ["lightning-dissector.deserializers.node-announcement"] = "src/deserializers/node-announcement.lua",
     ["lightning-dissector.utils.reader"] = "src/utils/reader.lua",
     ["plc52.bin"] = "plc/plc/bin.lua",
     ["plc52.chacha20"] = "plc/plc/chacha20.lua"
