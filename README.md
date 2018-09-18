@@ -38,8 +38,6 @@ Currently, lightning-dissector can decrypt messages sent from / received by
 - eclair
 - ptarmigan
 
-Also [you can analyze messages of unsupported implementations by specifying decryption keys manually.](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md#by-using-key-dump-file)
-
 If you are developer of some BOLT implementation, I need your help!  
 [You can make lightning-dissector support your implementation by writing a SecretManager.](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md#by-writing-a-new-secretmanager)
 
@@ -54,4 +52,4 @@ Currently, lightning-dissector can deserialize
 - channel_update
 
 I'm working on another messages.  
-And [you can write deserializers for another messages easily.](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md)
+And [you can write deserializers for another messages.](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md)
