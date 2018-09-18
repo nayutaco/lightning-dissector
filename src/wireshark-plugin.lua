@@ -18,8 +18,8 @@ protocol.prefs.note = Pref.statictext("Restart Wireshark to let changes take eff
 local pdu_analyzer = PduAnalyzer:new(
   SecretCache:new(
     CompositeSecretManager:new(
-      PtarmSecretManager:new(protocol.prefs.ptarmigan_key_path),
-      EclairSecretManager:new(protocol.prefs.eclair_key_path)
+      EclairSecretManager:new(protocol.prefs.eclair_key_path),
+      PtarmSecretManager:new(protocol.prefs.ptarmigan_key_path)
     )
   )
 )
