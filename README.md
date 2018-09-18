@@ -33,10 +33,6 @@ export LIGHTNINGKEYLOGFILE=~/.cache/lightning-dissector/keys.log
 You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Ptarmigan key file` preference same. (~/.cache/lightning-dissector/ptarmigan-keys.log by default)
 
 ## Status
-### Limitation
-Currently, lightning-dissector needs Wireshark already started at the time lightning nodes start handshaking.    
-If not, all decryptions will fail.
-
 ### Supported implementations
 Currently, lightning-dissector can decrypt messages sent from / received by
 - eclair
