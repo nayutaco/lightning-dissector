@@ -15,15 +15,6 @@ protocol.prefs.ptarmigan_key_path = Pref.string("Ptarmigan key file", "~/.cache/
 protocol.prefs.eclair_key_path = Pref.string("Eclair log file", "~/.eclair/eclair.log")
 protocol.prefs.note = Pref.statictext("Restart Wireshark to let changes take effect.")
 
-local pdu_analyzer = PduAnalyzer:new(
-  SecretCache:new(
-    CompositeSecretManager:new(
-      EclairSecretManager:new(protocol.prefs.eclair_key_path),
-      PtarmSecretManager:new(protocol.prefs.ptarmigan_key_path)
-    )
-  )
-)
-
 local function display(tree, analyzed_frame)
   for key, value in pairs(analyzed_frame) do
     if type(value) == "table" then
@@ -33,6 +24,19 @@ local function display(tree, analyzed_frame)
       tree:add(key .. ": " .. value)
     end
   end
+end
+
+local pdu_analyzer
+
+function protocol.init()
+  pdu_analyzer = PduAnalyzer:new(
+    SecretCache:new(
+      CompositeSecretManager:new(
+        EclairSecretManager:new(protocol.prefs.eclair_key_path),
+        PtarmSecretManager:new(protocol.prefs.ptarmigan_key_path)
+      )
+    )
+  )
 end
 
 function protocol.dissector(buffer, pinfo, tree)
