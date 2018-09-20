@@ -26,11 +26,11 @@ Set `$LIGHTNINGKEYLOGFILE` before starting ptarmigan.
 ptarmigan dumps decryption keys to there.
 
 ```bash
-mkdir ~/.cache/lightning-dissector
-export LIGHTNINGKEYLOGFILE=~/.cache/lightning-dissector/keys.log 
+mkdir ~/.cache/ptarmigan
+export LIGHTNINGKEYLOGFILE=~/.cache/ptarmigan/keys.log 
 ```
 
-You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Ptarmigan key file` preference same. (~/.cache/lightning-dissector/ptarmigan-keys.log by default)
+You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Ptarmigan key file` preference same. (~/.cache/ptarmigan/keys.log by default)
 
 ## Status
 ### Supported implementations
