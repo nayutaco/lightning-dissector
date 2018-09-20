@@ -104,8 +104,8 @@ end
 
 local CompositeSecretManager = class("CompositeSecretManager", SecretManager)
 
-function CompositeSecretManager:initialize(...)
-  self.secret_managers = table.pack(...)
+function CompositeSecretManager:initialize(secret_managers)
+  self.secret_managers = secret_managers
 end
 
 function CompositeSecretManager:find_secret(pinfo, buffer)

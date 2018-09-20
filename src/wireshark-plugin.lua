@@ -11,9 +11,10 @@ local EclairSecretManager = require("lightning-dissector.secret-manager").Eclair
 local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
-protocol.prefs.ptarmigan_key_path = Pref.string("Ptarmigan key file", "~/.cache/ptarmigan/keys.log")
-protocol.prefs.eclair_key_path = Pref.string("Eclair log file", "~/.eclair/eclair.log")
-protocol.prefs.note = Pref.statictext("Restart Wireshark to let changes take effect.")
+protocol.prefs.ptarmigan_key_paths = Pref.string("Ptarmigan key file", "~/.cache/ptarmigan/keys.log")
+protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/eclair.log")
+protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator just like $PATH.")
+protocol.prefs.note2 = Pref.statictext("Restart Wireshark to let changes take effect.")
 
 local function display(tree, analyzed_frame)
   for key, value in pairs(analyzed_frame) do
@@ -29,14 +30,17 @@ end
 local pdu_analyzer
 
 function protocol.init()
-  pdu_analyzer = PduAnalyzer:new(
-    SecretCache:new(
-      CompositeSecretManager:new(
-        EclairSecretManager:new(protocol.prefs.eclair_key_path),
-        PtarmSecretManager:new(protocol.prefs.ptarmigan_key_path)
-      )
-    )
-  )
+  local secret_managers = {}
+
+  for ptarmigan_key_path in protocol.prefs.ptarmigan_key_paths:gmatch("[^:]+") do
+    table.insert(secret_managers, PtarmSecretManager:new(ptarmigan_key_path))
+  end
+
+  for eclair_key_path in protocol.prefs.eclair_key_paths:gmatch("[^:]+") do
+    table.insert(secret_managers, EclairSecretManager:new(eclair_key_path))
+  end
+
+  pdu_analyzer = PduAnalyzer:new(SecretCache:new(CompositeSecretManager:new(secret_managers)))
 end
 
 function protocol.dissector(buffer, pinfo, tree)
