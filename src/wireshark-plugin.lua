@@ -13,7 +13,7 @@ local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
 local protocol = Proto("LIGHTNING", "Lightning Network")
 protocol.prefs.ptarmigan_key_paths = Pref.string("Ptarmigan key file", "~/.cache/ptarmigan/keys.log")
 protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/eclair.log")
-protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator just like $PATH.")
+protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
 protocol.prefs.note2 = Pref.statictext("Restart Wireshark to let changes take effect.")
 
 local function display(tree, analyzed_frame)

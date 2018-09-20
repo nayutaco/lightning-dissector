@@ -49,7 +49,7 @@ function PtarmSecretManager:renew_secret(buffer)
   -- First, assume nonce of the message is 0, and search key for the message
   local log_file = io.open(self.log_path)
   if log_file == nil then
-    critical("$LIGHTNINGKEYLOGFILE refers to non-existent file")
+    critical('A preference "Ptarmigan key file" refers to non-existent file')
     return
   end
 
@@ -76,7 +76,7 @@ function EclairSecretManager:renew_secret(buffer)
 
   local log_file = io.open(self.log_path)
   if log_file == nil then
-    critical("$ECLAIRLOGFILE refers to non-existent file")
+    critical('A preference "Eclair log file" refers to non-existent file')
     return
   end
 
