@@ -61,37 +61,6 @@ function PtarmSecretManager:renew_secret(buffer)
     local packed_key = bin.hextos(key)
     return Secret:new(packed_key)
   end
-
-  -- Second, assume either last 2 lines in the log is the key for the message, and find the nonce
-  local lines = {}
-  for line in log:gmatch("[^\r\n]+") do
-    table.insert(lines, line)
-  end
-  lines = {lines[#lines], lines[#lines - 1] }
-
-  local packed_keys = {}
-  for _, line in pairs(lines) do
-    local key = rex.match(line, " ([0-9a-f]+)")
-    if key == nil then
-      critical("Ptarmigan key log file format is incorrect")
-      return
-    end
-
-    local packed_key = bin.hextos(key)
-    table.insert(packed_keys, packed_key)
-  end
-
-  local packed_length = buffer:raw(0, 2)
-
-  -- FIXME: This causes Wireshark freeze one second
-  for nonce = 0, 998, 2 do
-    for _, packed_key in pairs(packed_keys) do
-      local secret = Secret:new(packed_key, nonce)
-      if secret:can_decrypt(packed_length, packed_length_mac) then
-        return secret
-      end
-    end
-  end
 end
 
 local EclairSecretManager = class("EclairSecretManager", KeyLogManager)
