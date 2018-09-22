@@ -48,12 +48,12 @@ end
 
 local PduAnalyzer = class("PduAnalyzer")
 
-function PduAnalyzer:initialize(secret_manager)
-  self.secret_manager = secret_manager
+function PduAnalyzer:initialize(secret_cache)
+  self.secret_cache = secret_cache
 end
 
 function PduAnalyzer:analyze(pinfo, buffer)
-  local secret = self.secret_manager:find_secret(pinfo, buffer)
+  local secret = self.secret_cache:find_secret(pinfo, buffer)
   if secret == nil then
     return {
       Note = "Decryption key not found. maybe still in handshake phase."
@@ -72,7 +72,7 @@ function PduAnalyzer:analyze(pinfo, buffer)
   if whole_length > buffer():len() then
     secret._nonce = secret._nonce - 1
     pinfo.desegment_len = whole_length - buffer():len()
-    self.secret_manager.secrets[buffer():raw(2, 16)] = nil
+    self.secret_cache.secrets[buffer():raw(2, 16)] = nil
     return
   end
 

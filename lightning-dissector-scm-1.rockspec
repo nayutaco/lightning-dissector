@@ -27,6 +27,7 @@ build = {
     ["lightning-dissector.pdu-analyzer"] = "src/pdu-analyzer.lua",
     ["lightning-dissector.secret"] = "src/secret.lua",
     ["lightning-dissector.secret-manager"] = "src/secret-manager.lua",
+    ["lightning-dissector.secret-cache"] = "src/secret-cache.lua",
     ["lightning-dissector.deserializers.init"] = "src/deserializers/init.lua",
     ["lightning-dissector.deserializers.ping"] = "src/deserializers/ping.lua",
     ["lightning-dissector.deserializers.pong"] = "src/deserializers/pong.lua",
