@@ -4,7 +4,7 @@ package.path = os.getenv("HOME")
   .. "/.luarocks/share/lua/5.2/?/init.lua;"
   .. package.path
 
-local SecretCache = require("lightning-dissector.secret-cache")
+local SecretCachePerPdu = require("lightning-dissector.secret-cache").SecretCachePerPdu
 local CompositeSecretFactory = require("lightning-dissector.secret-factory").CompositeSecretFactory
 local PtarmSecretFactory = require("lightning-dissector.secret-factory").PtarmSecretFactory
 local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
@@ -40,7 +40,7 @@ function protocol.init()
     table.insert(secret_factories, EclairSecretFactory:new(eclair_key_path))
   end
 
-  pdu_analyzer = PduAnalyzer:new(SecretCache:new(CompositeSecretFactory:new(secret_factories)))
+  pdu_analyzer = PduAnalyzer:new(SecretCachePerPdu:new(CompositeSecretFactory:new(secret_factories)))
 end
 
 function protocol.dissector(buffer, pinfo, tree)

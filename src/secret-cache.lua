@@ -1,13 +1,13 @@
 local class = require "middleclass"
 
-local SecretCache = class("SecretCache")
+local SecretCachePerPdu = class("SecretCachePerPdu")
 
-function SecretCache:initialize(secret_factory)
+function SecretCachePerPdu:initialize(secret_factory)
   self.secret_factory = secret_factory
   self.secrets = {}
 end
 
-function SecretCache:find_or_create(pinfo, buffer)
+function SecretCachePerPdu:find_or_create(pinfo, buffer)
   local length_mac = buffer:raw(2, 16)
   local secret_for_pdu = self.secrets[length_mac]
 
@@ -28,8 +28,10 @@ function SecretCache:find_or_create(pinfo, buffer)
   self.secrets[length_mac] = "NOT FOUND"
 end
 
-function SecretCache:delete(cache_key)
+function SecretCachePerPdu:delete(cache_key)
   self.secrets[cache_key] = nil
 end
 
-return SecretCache
+return {
+  SecretCachePerPdu = SecretCachePerPdu
+}
