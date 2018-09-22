@@ -46,9 +46,15 @@ end
 function protocol.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Lightning Network"
 
-  local offset = 0
+  local offset = pinfo.desegment_offset or 0
   while offset < buffer:len() do
     local analyzed_pdu = pdu_analyzer:analyze(pinfo, buffer(offset):tvb())
+
+    if 0 < pinfo.desegment_len then
+      pinfo.desegment_offset = offset
+      debug(pinfo.desegment_len)
+      return
+    end
 
     -- TODO: Refactoring
     if analyzed_pdu.Length == nil then

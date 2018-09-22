@@ -67,6 +67,15 @@ function PduAnalyzer:analyze(pinfo, buffer)
   local packed_decrypted_len = secret:decrypt(packed_encrypted_len, packed_len_mac)
   local decrypted_len = string.unpack(">I2", packed_decrypted_len)
 
+  -- TODO: Refactoring: Write this in protocol.dissector
+  local whole_length = decrypted_len + 2 + 16 + 16
+  if whole_length > buffer():len() then
+    secret._nonce = secret._nonce - 1
+    pinfo.desegment_len = whole_length - buffer():len()
+    self.secret_manager.secrets[buffer():raw(2, 16)] = nil
+    return
+  end
+
   local packed_encrypted_msg = buffer:raw(18, decrypted_len)
   local packed_msg_mac = buffer:raw(18 + decrypted_len, 16)
 
