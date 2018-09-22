@@ -10,6 +10,7 @@ local CompositeSecretFactory = require("lightning-dissector.secret-factory").Com
 local PtarmSecretFactory = require("lightning-dissector.secret-factory").PtarmSecretFactory
 local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
 local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
+local constants = require "lightning-dissector.constants"
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
 protocol.prefs.ptarmigan_key_paths = Pref.string("Ptarmigan key file", "~/.cache/ptarmigan/keys.log")
@@ -69,9 +70,7 @@ function protocol.dissector(buffer, pinfo, tree)
     if analyzed_pdu.Length == nil then
       offset = buffer:len()
     else
-      local header_length = 18
-      local footer_length = 16
-      offset = offset + header_length + analyzed_pdu.Length.Deserialized + footer_length
+      offset = offset + constants.lengths.header + analyzed_pdu.Length.Deserialized + constants.lengths.footer
     end
 
     local subtree = tree:add(protocol, "Lightning Network")

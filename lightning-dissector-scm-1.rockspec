@@ -28,6 +28,7 @@ build = {
     ["lightning-dissector.secret"] = "src/secret.lua",
     ["lightning-dissector.secret-factory"] = "src/secret-factory.lua",
     ["lightning-dissector.secret-cache"] = "src/secret-cache.lua",
+    ["lightning-dissector.constants"] = "src/constants.lua",
     ["lightning-dissector.deserializers.init"] = "src/deserializers/init.lua",
     ["lightning-dissector.deserializers.ping"] = "src/deserializers/ping.lua",
     ["lightning-dissector.deserializers.pong"] = "src/deserializers/pong.lua",

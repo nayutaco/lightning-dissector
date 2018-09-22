@@ -1,5 +1,6 @@
 local class = require "middleclass"
 local bin = require "plc52.bin"
+local constants = require "lightning-dissector.constants"
 
 local deserializers = {
   require("lightning-dissector.deserializers.init"):new(),
@@ -62,13 +63,13 @@ function PduAnalyzer:analyze(pinfo, buffer)
 
   local secret_before_decryption = secret:clone()
 
-  local packed_encrypted_len = buffer():raw(0, 2)
-  local packed_len_mac = buffer():raw(2, 16)
+  local packed_encrypted_len = buffer():raw(0, constants.lengths.length)
+  local packed_len_mac = buffer():raw(constants.lengths.length, constants.lengths.length_mac)
   local packed_decrypted_len = secret:decrypt(packed_encrypted_len, packed_len_mac)
   local decrypted_len = string.unpack(">I2", packed_decrypted_len)
 
   -- TODO: Refactoring: Write this in protocol.dissector
-  local whole_length = decrypted_len + 2 + 16 + 16
+  local whole_length = constants.lengths.header + decrypted_len + constants.lengths.footer
   if whole_length > buffer():len() then
     secret._nonce = secret._nonce - 1
     pinfo.desegment_len = whole_length - buffer():len()
@@ -76,8 +77,8 @@ function PduAnalyzer:analyze(pinfo, buffer)
     return
   end
 
-  local packed_encrypted_msg = buffer:raw(18, decrypted_len)
-  local packed_msg_mac = buffer:raw(18 + decrypted_len, 16)
+  local packed_encrypted_msg = buffer:raw(constants.lengths.header, decrypted_len)
+  local packed_msg_mac = buffer:raw(constants.lengths.header + decrypted_len, constants.lengths.message_mac)
 
   local packed_decrypted_msg = secret:decrypt(packed_encrypted_msg, packed_msg_mac)
 

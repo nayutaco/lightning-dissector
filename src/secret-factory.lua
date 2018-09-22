@@ -2,6 +2,7 @@ local class = require "middleclass"
 local bin = require "plc52.bin"
 local rex = require "rex_pcre"
 local Secret = require "lightning-dissector.secret"
+local constants = require "lightning-dissector.constants"
 
 local SecretFactory = class("SecretFactory")
 
@@ -16,7 +17,7 @@ function PtarmSecretFactory:initialize(log_path)
 end
 
 function PtarmSecretFactory:create(buffer)
-  local packed_length_mac = buffer:raw(2, 16)
+  local packed_length_mac = buffer:raw(constants.lengths.length, constants.lengths.length_mac)
   local length_mac = bin.stohex(packed_length_mac)
 
   -- First, assume nonce of the message is 0, and search key for the message
@@ -43,7 +44,7 @@ function EclairSecretFactory:initialize(log_path)
 end
 
 function EclairSecretFactory:create(buffer)
-  local packed_length_mac = buffer:raw(2, 16)
+  local packed_length_mac = buffer:raw(constants.lengths.length, constants.lengths.length_mac)
   local length_mac = bin.stohex(packed_length_mac)
 
   local log_file = io.open(self.log_path)

@@ -1,4 +1,5 @@
 local class = require "middleclass"
+local constants = require "lightning-dissector.constants"
 
 local SecretCachePerPdu = class("SecretCachePerPdu")
 
@@ -8,7 +9,7 @@ function SecretCachePerPdu:initialize(secret_cache)
 end
 
 function SecretCachePerPdu:find_or_create(pinfo, buffer)
-  local length_mac = buffer:raw(2, 16)
+  local length_mac = buffer:raw(constants.lengths.length, constants.lengths.length_mac)
   local secret_for_pdu = self.secrets[length_mac]
 
   if secret_for_pdu == "NOT FOUND" then
