@@ -5,9 +5,9 @@ package.path = os.getenv("HOME")
   .. package.path
 
 local SecretCache = require("lightning-dissector.secret-cache")
-local CompositeSecretManager = require("lightning-dissector.secret-manager").CompositeSecretManager
-local PtarmSecretManager = require("lightning-dissector.secret-manager").PtarmSecretManager
-local EclairSecretManager = require("lightning-dissector.secret-manager").EclairSecretManager
+local CompositeSecretFactory = require("lightning-dissector.secret-factory").CompositeSecretFactory
+local PtarmSecretFactory = require("lightning-dissector.secret-factory").PtarmSecretFactory
+local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
 local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
@@ -30,17 +30,17 @@ end
 local pdu_analyzer
 
 function protocol.init()
-  local secret_managers = {}
+  local secret_factories = {}
 
   for ptarmigan_key_path in protocol.prefs.ptarmigan_key_paths:gmatch("[^:]+") do
-    table.insert(secret_managers, PtarmSecretManager:new(ptarmigan_key_path))
+    table.insert(secret_factories, PtarmSecretFactory:new(ptarmigan_key_path))
   end
 
   for eclair_key_path in protocol.prefs.eclair_key_paths:gmatch("[^:]+") do
-    table.insert(secret_managers, EclairSecretManager:new(eclair_key_path))
+    table.insert(secret_factories, EclairSecretFactory:new(eclair_key_path))
   end
 
-  pdu_analyzer = PduAnalyzer:new(SecretCache:new(CompositeSecretManager:new(secret_managers)))
+  pdu_analyzer = PduAnalyzer:new(SecretCache:new(CompositeSecretFactory:new(secret_factories)))
 end
 
 function protocol.dissector(buffer, pinfo, tree)

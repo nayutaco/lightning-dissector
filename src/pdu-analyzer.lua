@@ -53,7 +53,7 @@ function PduAnalyzer:initialize(secret_cache)
 end
 
 function PduAnalyzer:analyze(pinfo, buffer)
-  local secret = self.secret_cache:find_secret(pinfo, buffer)
+  local secret = self.secret_cache:find_or_create(pinfo, buffer)
   if secret == nil then
     return {
       Note = "Decryption key not found. maybe still in handshake phase."

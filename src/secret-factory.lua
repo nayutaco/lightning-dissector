@@ -3,26 +3,26 @@ local bin = require "plc52.bin"
 local rex = require "rex_pcre"
 local Secret = require "lightning-dissector.secret"
 
-local SecretManager = class("SecretManager")
+local SecretFactory = class("SecretFactory")
 
-function SecretManager:find_secret(pinfo, buffer)
+function SecretFactory:find_or_create(pinfo, buffer)
   error("Not implemented")
 end
 
-local KeyLogManager = class("KeyLogManager", SecretManager)
+local KeyLogManager = class("KeyLogManager", SecretFactory)
 
 function KeyLogManager:initialize()
   self.secrets = {}
 end
 
-function KeyLogManager:find_secret(pinfo, buffer)
+function KeyLogManager:find_or_create(pinfo, buffer)
   local host = tostring(pinfo.dst) .. ":" .. pinfo.dst_port
 
   if self.secrets[host] ~= nil and 1000 > self.secrets[host]:nonce() then
     return self.secrets[host]
   end
 
-  local secret = self:renew_secret(buffer)
+  local secret = self:create(buffer)
   if secret == nil then
     return
   end
@@ -31,18 +31,18 @@ function KeyLogManager:find_secret(pinfo, buffer)
   return self.secrets[host]
 end
 
-function KeyLogManager:renew_secret(buffer)
+function KeyLogManager:create(buffer)
   error("Not implemented")
 end
 
-local PtarmSecretManager = class("PtarmSecretManager", KeyLogManager)
+local PtarmSecretFactory = class("PtarmSecretFactory", KeyLogManager)
 
-function PtarmSecretManager:initialize(log_path)
+function PtarmSecretFactory:initialize(log_path)
   KeyLogManager.initialize(self)
   self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
 end
 
-function PtarmSecretManager:renew_secret(buffer)
+function PtarmSecretFactory:create(buffer)
   local packed_length_mac = buffer:raw(2, 16)
   local length_mac = bin.stohex(packed_length_mac)
 
@@ -63,14 +63,14 @@ function PtarmSecretManager:renew_secret(buffer)
   end
 end
 
-local EclairSecretManager = class("EclairSecretManager", KeyLogManager)
+local EclairSecretFactory = class("EclairSecretFactory", KeyLogManager)
 
-function EclairSecretManager:initialize(log_path)
+function EclairSecretFactory:initialize(log_path)
   KeyLogManager.initialize(self)
   self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
 end
 
-function EclairSecretManager:renew_secret(buffer)
+function EclairSecretFactory:create(buffer)
   local packed_length_mac = buffer:raw(2, 16)
   local length_mac = bin.stohex(packed_length_mac)
 
@@ -102,15 +102,15 @@ function EclairSecretManager:renew_secret(buffer)
   end
 end
 
-local CompositeSecretManager = class("CompositeSecretManager", SecretManager)
+local CompositeSecretFactory = class("CompositeSecretFactory", SecretFactory)
 
-function CompositeSecretManager:initialize(secret_managers)
-  self.secret_managers = secret_managers
+function CompositeSecretFactory:initialize(secret_factories)
+  self.secret_factories = secret_factories
 end
 
-function CompositeSecretManager:find_secret(pinfo, buffer)
-  for _, secret_manager in ipairs(self.secret_managers) do
-    local secret = secret_manager:find_secret(pinfo, buffer)
+function CompositeSecretFactory:find_or_create(pinfo, buffer)
+  for _, secret_factory in ipairs(self.secret_factories) do
+    local secret = secret_factory:find_or_create(pinfo, buffer)
 
     if secret ~= nil then
       return secret
@@ -119,7 +119,7 @@ function CompositeSecretManager:find_secret(pinfo, buffer)
 end
 
 return {
-  CompositeSecretManager = CompositeSecretManager,
-  PtarmSecretManager = PtarmSecretManager,
-  EclairSecretManager = EclairSecretManager
+  CompositeSecretFactory = CompositeSecretFactory,
+  PtarmSecretFactory = PtarmSecretFactory,
+  EclairSecretFactory = EclairSecretFactory
 }

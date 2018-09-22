@@ -2,8 +2,8 @@ local class = require "middleclass"
 
 local SecretCache = class("SecretCache")
 
-function SecretCache:initialize(secret_manager)
-  self.secret_manager = secret_manager
+function SecretCache:initialize(secret_factory)
+  self.secret_factory = secret_factory
   self.secrets = {}
 end
 
@@ -19,7 +19,7 @@ function SecretCache:find_or_create(pinfo, buffer)
     return secret_for_pdu:clone()
   end
 
-  local secret_for_node = self.secret_manager:find_secret(pinfo, buffer)
+  local secret_for_node = self.secret_factory:find_or_create(pinfo, buffer)
   if secret_for_node ~= nil then
     self.secrets[length_mac] = secret_for_node:clone()
     return secret_for_node
