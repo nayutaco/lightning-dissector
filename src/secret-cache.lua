@@ -2,8 +2,8 @@ local class = require "middleclass"
 
 local SecretCachePerPdu = class("SecretCachePerPdu")
 
-function SecretCachePerPdu:initialize(secret_factory)
-  self.secret_factory = secret_factory
+function SecretCachePerPdu:initialize(secret_cache)
+  self.secret_cache = secret_cache
   self.secrets = {}
 end
 
@@ -19,10 +19,10 @@ function SecretCachePerPdu:find_or_create(pinfo, buffer)
     return secret_for_pdu:clone()
   end
 
-  local secret_for_node = self.secret_factory:find_or_create(pinfo, buffer)
-  if secret_for_node ~= nil then
-    self.secrets[length_mac] = secret_for_node:clone()
-    return secret_for_node
+  local secret_for_host = self.secret_cache:find_or_create(pinfo, buffer)
+  if secret_for_host ~= nil then
+    self.secrets[length_mac] = secret_for_host:clone()
+    return secret_for_host
   end
 
   self.secrets[length_mac] = "NOT FOUND"
@@ -32,6 +32,28 @@ function SecretCachePerPdu:delete(cache_key)
   self.secrets[cache_key] = nil
 end
 
+local SecretCachePerHost = class("SecretCachePerHost")
+
+function SecretCachePerHost:initialize(secret_factory)
+  self.secret_factory = secret_factory
+  self.secrets = {}
+end
+
+function SecretCachePerHost:find_or_create(pinfo, buffer)
+  local host = tostring(pinfo.dst) .. ":" .. pinfo.dst_port
+
+  if self.secrets[host] ~= nil and 1000 > self.secrets[host]:nonce() then
+    return self.secrets[host]
+  end
+
+  local secret = self.secret_factory:create(buffer)
+  if secret ~= nil then
+    self.secrets[host] = secret
+    return self.secrets[host]
+  end
+end
+
 return {
-  SecretCachePerPdu = SecretCachePerPdu
+  SecretCachePerPdu = SecretCachePerPdu,
+  SecretCachePerHost = SecretCachePerHost
 }

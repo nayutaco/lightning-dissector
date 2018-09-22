@@ -5,6 +5,7 @@ package.path = os.getenv("HOME")
   .. package.path
 
 local SecretCachePerPdu = require("lightning-dissector.secret-cache").SecretCachePerPdu
+local SecretCachePerHost = require("lightning-dissector.secret-cache").SecretCachePerHost
 local CompositeSecretFactory = require("lightning-dissector.secret-factory").CompositeSecretFactory
 local PtarmSecretFactory = require("lightning-dissector.secret-factory").PtarmSecretFactory
 local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
@@ -40,7 +41,15 @@ function protocol.init()
     table.insert(secret_factories, EclairSecretFactory:new(eclair_key_path))
   end
 
-  pdu_analyzer = PduAnalyzer:new(SecretCachePerPdu:new(CompositeSecretFactory:new(secret_factories)))
+  pdu_analyzer = PduAnalyzer:new(
+    SecretCachePerPdu:new(
+      SecretCachePerHost:new(
+        CompositeSecretFactory:new(
+          secret_factories
+        )
+      )
+    )
+  )
 end
 
 function protocol.dissector(buffer, pinfo, tree)

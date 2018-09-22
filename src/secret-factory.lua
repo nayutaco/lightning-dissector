@@ -5,40 +5,13 @@ local Secret = require "lightning-dissector.secret"
 
 local SecretFactory = class("SecretFactory")
 
-function SecretFactory:find_or_create(pinfo, buffer)
+function SecretFactory:create(buffer)
   error("Not implemented")
 end
 
-local KeyLogManager = class("KeyLogManager", SecretFactory)
-
-function KeyLogManager:initialize()
-  self.secrets = {}
-end
-
-function KeyLogManager:find_or_create(pinfo, buffer)
-  local host = tostring(pinfo.dst) .. ":" .. pinfo.dst_port
-
-  if self.secrets[host] ~= nil and 1000 > self.secrets[host]:nonce() then
-    return self.secrets[host]
-  end
-
-  local secret = self:create(buffer)
-  if secret == nil then
-    return
-  end
-
-  self.secrets[host] = secret
-  return self.secrets[host]
-end
-
-function KeyLogManager:create(buffer)
-  error("Not implemented")
-end
-
-local PtarmSecretFactory = class("PtarmSecretFactory", KeyLogManager)
+local PtarmSecretFactory = class("PtarmSecretFactory", SecretFactory)
 
 function PtarmSecretFactory:initialize(log_path)
-  KeyLogManager.initialize(self)
   self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
 end
 
@@ -63,10 +36,9 @@ function PtarmSecretFactory:create(buffer)
   end
 end
 
-local EclairSecretFactory = class("EclairSecretFactory", KeyLogManager)
+local EclairSecretFactory = class("EclairSecretFactory", SecretFactory)
 
 function EclairSecretFactory:initialize(log_path)
-  KeyLogManager.initialize(self)
   self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
 end
 
@@ -108,9 +80,9 @@ function CompositeSecretFactory:initialize(secret_factories)
   self.secret_factories = secret_factories
 end
 
-function CompositeSecretFactory:find_or_create(pinfo, buffer)
+function CompositeSecretFactory:create(buffer)
   for _, secret_factory in ipairs(self.secret_factories) do
-    local secret = secret_factory:find_or_create(pinfo, buffer)
+    local secret = secret_factory:create(buffer)
 
     if secret ~= nil then
       return secret
