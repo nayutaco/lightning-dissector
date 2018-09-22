@@ -72,7 +72,7 @@ function PduAnalyzer:analyze(pinfo, buffer)
   if whole_length > buffer():len() then
     secret._nonce = secret._nonce - 1
     pinfo.desegment_len = whole_length - buffer():len()
-    self.secret_cache.secrets[buffer():raw(2, 16)] = nil
+    self.secret_cache:delete(packed_len_mac)
     return
   end
 

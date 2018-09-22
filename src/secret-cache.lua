@@ -28,4 +28,8 @@ function SecretCache:find_or_create(pinfo, buffer)
   self.secrets[length_mac] = "NOT FOUND"
 end
 
+function SecretCache:delete(cache_key)
+  self.secrets[cache_key] = nil
+end
+
 return SecretCache
