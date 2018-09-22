@@ -10,19 +10,15 @@ local Secret = class("Secret")
 
 function Secret:initialize(packed_key, nonce)
   self._packed_key = packed_key  -- const readonly
-  self._nonce = nonce or 0  -- readonly
+  self.nonce = nonce or 0
 end
 
 function Secret:packed_key()
   return self._packed_key
 end
 
-function Secret:nonce()
-  return self._nonce
-end
-
 function Secret:packed_nonce()
-  return "\x00\x00\x00\x00" .. string.pack("I8", self._nonce)
+  return "\x00\x00\x00\x00" .. string.pack("I8", self.nonce)
 end
 
 function Secret:decrypt(packed_msg, packed_mac)
@@ -35,7 +31,7 @@ function Secret:decrypt(packed_msg, packed_mac)
     error("MAC is correct, but can't decrypt the message")
   end
 
-  self._nonce = self._nonce + 1
+  self.nonce = self.nonce + 1
   return decrypted
 end
 
@@ -50,7 +46,7 @@ end
 function Secret:clone()
   local clone = {
     _packed_key = self._packed_key,
-    _nonce = self._nonce
+    nonce = self.nonce
   }
 
   return setmetatable(clone, {__index = self})

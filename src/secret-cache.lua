@@ -43,7 +43,7 @@ end
 function SecretCachePerHost:find_or_create(pinfo, buffer)
   local host = tostring(pinfo.dst) .. ":" .. pinfo.dst_port
 
-  if self.secrets[host] ~= nil and 1000 > self.secrets[host]:nonce() then
+  if self.secrets[host] ~= nil and 1000 > self.secrets[host].nonce then
     return self.secrets[host]
   end
 

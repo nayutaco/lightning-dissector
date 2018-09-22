@@ -71,9 +71,9 @@ function PduAnalyzer:analyze(pinfo, buffer)
   -- TODO: Refactoring: Write this in protocol.dissector
   local whole_length = constants.lengths.header + decrypted_len + constants.lengths.footer
   if whole_length > buffer():len() then
-    secret._nonce = secret._nonce - 1
-    pinfo.desegment_len = whole_length - buffer():len()
     self.secret_cache:delete(packed_len_mac)
+    secret.nonce = secret_before_decryption.nonce
+    pinfo.desegment_len = whole_length - buffer():len()
     return
   end
 
@@ -87,7 +87,7 @@ function PduAnalyzer:analyze(pinfo, buffer)
       Key = bin.stohex(secret_before_decryption:packed_key()),
       Nonce = {
         Raw = bin.stohex(secret_before_decryption:packed_nonce()),
-        Deserialized = secret_before_decryption:nonce()
+        Deserialized = secret_before_decryption.nonce
       }
     },
     Length = {
