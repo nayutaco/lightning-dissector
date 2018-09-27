@@ -47,44 +47,50 @@ local function deserialize(packed_msg)
   return result
 end
 
-local function analyze(pinfo, buffer, secret)
-  local secret_before_decryption = secret:clone()
-
-  local packed_encrypted_len = buffer():raw(0, constants.lengths.length)
-  local packed_len_mac = buffer():raw(constants.lengths.length, constants.lengths.length_mac)
-  local packed_decrypted_len = secret:decrypt(packed_encrypted_len, packed_len_mac)
-  local decrypted_len = string.unpack(">I2", packed_decrypted_len)
-
-  -- TODO: Refactoring: Write this in protocol.dissector
-  local whole_length = constants.lengths.header + decrypted_len + constants.lengths.footer
-  if whole_length > buffer():len() then
-    self.secret_cache:delete(packed_len_mac)
-    secret.nonce = secret_before_decryption.nonce
-    pinfo.desegment_len = whole_length - buffer():len()
-    return
-  end
-
-  local packed_encrypted_msg = buffer:raw(constants.lengths.header, decrypted_len)
-  local packed_msg_mac = buffer:raw(constants.lengths.header + decrypted_len, constants.lengths.message_mac)
-
-  local packed_decrypted_msg = secret:decrypt(packed_encrypted_msg, packed_msg_mac)
+local function analyze_length(buffer, secret)
+  local packed_encrypted = buffer():raw(0, constants.lengths.length)
+  local packed_mac = buffer():raw(constants.lengths.length, constants.lengths.length_mac)
+  local packed_decrypted = secret:decrypt(packed_encrypted, packed_mac)
+  local deserialized = string.unpack(">I2", packed_decrypted)
 
   return {
-    Length = {
-      Encrypted = bin.stohex(packed_encrypted_len),
-      MAC = bin.stohex(packed_len_mac),
-      Decrypted = bin.stohex(packed_decrypted_len),
-      Deserialized = decrypted_len
-    },
-    Message = {
-      Encrypted = bin.stohex(packed_encrypted_msg),
-      MAC = bin.stohex(packed_msg_mac),
-      Decrypted = bin.stohex(packed_decrypted_msg),
-      Deserialized = deserialize(packed_decrypted_msg)
-    }
+    packed_encrypted = packed_encrypted,
+    packed_mac = packed_mac,
+    packed_decrypted = packed_decrypted,
+    deserialized = deserialized,
+    display = function()
+      return {
+        Encrypted = bin.stohex(packed_encrypted),
+        Decrypted = bin.stohex(packed_decrypted),
+        Deserialized = deserialized,
+        MAC = bin.stohex(packed_mac)
+      }
+    end
+  }
+end
+
+local function analyze_payload(buffer, secret)
+  local payload_length = buffer:len() - constants.lengths.footer
+  local packed_encrypted = buffer:raw(0, payload_length)
+  local packed_mac = buffer:raw(payload_length, constants.lengths.message_mac)
+  local packed_decrypted = secret:decrypt(packed_encrypted, packed_mac)
+
+  return {
+    packed_encrypted = packed_encrypted,
+    packed_mac = packed_mac,
+    packed_decrypted = packed_decrypted,
+    display = function()
+      return {
+        Encrypted = bin.stohex(packed_encrypted),
+        MAC = bin.stohex(packed_mac),
+        Decrypted = bin.stohex(packed_decrypted),
+        Deserialized = deserialize(packed_decrypted)
+      }
+    end
   }
 end
 
 return {
-  analyze = analyze
+  analyze_length = analyze_length,
+  analyze_payload = analyze_payload
 }

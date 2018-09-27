@@ -50,30 +50,34 @@ function protocol.dissector(buffer, pinfo, tree)
 
   local offset = pinfo.desegment_offset or 0
   while offset < buffer:len() do
-    local analyzed_pdu
+    local pdu_buffer = buffer(offset):tvb()
+    local analyzed_pdu = {}
 
-    local secret = secret_cache:find_or_create(pinfo, buffer)
+    local secret = secret_cache:find_or_create(pinfo, pdu_buffer)
     if secret == nil then
-      analyzed_pdu =  {
-        Note = "Decryption key not found. maybe still in handshake phase."
-      }
-    else
-      local secret_before_decryption = secret:clone()
-      analyzed_pdu = pdu_analyzer.analyze(pinfo, buffer(offset):tvb(), secret)
-      analyzed_pdu.Secret = secret_before_decryption:display()
-    end
-
-    if 0 < pinfo.desegment_len then
-      pinfo.desegment_offset = offset
-      debug(pinfo.desegment_len)
-      return
-    end
-
-    -- TODO: Refactoring
-    if analyzed_pdu.Length == nil then
+      analyzed_pdu.Note = "Decryption key not found. maybe still in handshake phase."
       offset = buffer:len()
     else
-      offset = offset + constants.lengths.header + analyzed_pdu.Length.Deserialized + constants.lengths.footer
+      local secret_before_decryption = secret:clone()
+
+      local payload_length = pdu_analyzer.analyze_length(pdu_buffer, secret)
+      local whole_length = constants.lengths.header + payload_length.deserialized + constants.lengths.footer
+      if whole_length > pdu_buffer():len() then
+        secret_cache:delete(payload_length.packed_mac)
+        secret.nonce = secret_before_decryption.nonce
+        pinfo.desegment_len = whole_length - pdu_buffer():len()
+        pinfo.desegment_offset = offset
+        return
+      end
+
+      local payload_buffer =
+        pdu_buffer(constants.lengths.header, payload_length.deserialized + constants.lengths.footer):tvb()
+      local payload = pdu_analyzer.analyze_payload(payload_buffer, secret)
+
+      analyzed_pdu.Secret = secret:display()
+      analyzed_pdu.Length = payload_length.display()
+      analyzed_pdu.Message = payload.display()
+      offset = offset + whole_length
     end
 
     local subtree = tree:add(protocol, "Lightning Network")
