@@ -39,7 +39,7 @@ Currently, lightning-dissector can decrypt messages sent from / received by
 - ptarmigan
 
 If you are developer of some BOLT implementation, I need your help!  
-[You can make lightning-dissector support your implementation by writing a SecretManager.](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md#by-writing-a-new-secretmanager)
+[You can make lightning-dissector support your implementation by adding a SecretFactory.](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md)
 
 ### Supported BOLT messages
 Currently, lightning-dissector can deserialize

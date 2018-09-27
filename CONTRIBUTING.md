@@ -1,14 +1,7 @@
 # Add support for another implementation
-## By using key dump file
-lightning-dissector watches $LIGHTNINGKEYLOGFILE (by default ~/.cache/lightning-dissector/keys.log) to find the keys to decrypt messages.  
-Every line of $LIGHTNINGKEYLOGFILE consists of:  
-```
-<16-byte MAC of the encrypted message length> <rk or sk to decrypt that message>
-```
-What those mean is described in [BOLT #8](https://github.com/lightningnetwork/lightning-rfc/blob/master/08-transport.md#lightning-message-specification).  
-When key rotation happens, a new line must be inserted in $LIGHTNINGKEYLOGFILE.
+You can add support for another implementation by writing a new [SecretFactory](https://github.com/nayutaco/lightning-dissector/blob/7bd56fcfaa8b5326f7c8cf0418a0a149c26bcfdf/src/secret-factory.lua#L7).  
+and put its instance to [here](https://github.com/nayutaco/lightning-dissector/blob/7bd56fcfaa8b5326f7c8cf0418a0a149c26bcfdf/src/wireshark-plugin.lua#L35).
 
-So you can analyze lightning messages between unsupported implementations by doing above.
-
-## By writing a new SecretManager
-TODO
+# Add support for another message
+You can add support for another message by writing a new [deserializer like this](https://github.com/nayutaco/lightning-dissector/blob/master/src/deserializers/ping.lua).  
+and put its instance to [here](https://github.com/nayutaco/lightning-dissector/blob/7bd56fcfaa8b5326f7c8cf0418a0a149c26bcfdf/src/pdu-analyzer.lua#L5).
