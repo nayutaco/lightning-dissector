@@ -1,6 +1,9 @@
 local class = require "middleclass"
 local constants = require "lightning-dissector.constants"
 
+-- Wireshark calls dissector when 1) TCP segment comes 2) TCP segment get clicked,
+-- so we have to store Secret state at the time of 1 and reuse it when 2.
+-- This class does that.
 local SecretCachePerPdu = class("SecretCachePerPdu")
 
 function SecretCachePerPdu:initialize(secret_cache)
@@ -17,11 +20,13 @@ function SecretCachePerPdu:find_or_create(pinfo, buffer)
   end
 
   if secret_for_pdu ~= nil then
+    -- We return cloned one because Secret:decrypt should not mutate internal state of SecretCachePerPdu.
     return secret_for_pdu:clone()
   end
 
   local secret_for_host = self.secret_cache:find_or_create(pinfo, buffer)
   if secret_for_host ~= nil then
+    -- We store cloned one because Secret:decrypt should not mutate internal state of SecretCachePerPdu.
     self.secrets[length_mac] = secret_for_host:clone()
     return secret_for_host
   end
@@ -33,6 +38,8 @@ function SecretCachePerPdu:delete(cache_key)
   self.secrets[cache_key] = nil
 end
 
+-- Secret manages nonce so it should be instantiated per host.
+-- This class does that.
 local SecretCachePerHost = class("SecretCachePerHost")
 
 function SecretCachePerHost:initialize(secret_factory)
@@ -47,6 +54,7 @@ function SecretCachePerHost:find_or_create(pinfo, buffer)
     return self.secrets[host]
   end
 
+  -- When cache not hit or nonce exceeds 1000, instantiate new Secret.
   local secret = self.secret_factory:create(buffer)
   if secret ~= nil then
     self.secrets[host] = secret

@@ -48,7 +48,9 @@ end
 function protocol.dissector(buffer, pinfo, tree)
   pinfo.cols.protocol = "Lightning Network"
 
+  -- When a TCP segment contains multiple lightning messages, offset represents where a next lightning message starts.
   local offset = pinfo.desegment_offset or 0
+  -- Until we analyze all lightning messages in a TCP segment
   while offset < buffer:len() do
     local pdu_buffer = buffer(offset):tvb()
     local analyzed_pdu = {}
@@ -56,17 +58,26 @@ function protocol.dissector(buffer, pinfo, tree)
     local secret = secret_cache:find_or_create(pinfo, pdu_buffer)
     if secret == nil then
       analyzed_pdu.Note = "Decryption key not found. maybe still in handshake phase."
+      -- Finish the while loop.
       offset = buffer:len()
     else
       local secret_before_decryption = secret:clone()
 
       local payload_length = pdu_analyzer.analyze_length(pdu_buffer, secret)
       local whole_length = constants.lengths.header + payload_length.deserialized + constants.lengths.footer
+      -- When a lightning message is split across TCP segments
       if whole_length > pdu_buffer():len() then
+        -- If cache exists, secret_cache:find_or_create returns freezed Secret,
+        -- which means we cannot increment its nonce.
+        -- So we have to clear the cache.
         secret_cache:delete(payload_length.packed_mac)
         secret.nonce = secret_before_decryption.nonce
+        -- Tell Wireshark how many more bytes we need to complete a lightning message.
         pinfo.desegment_len = whole_length - pdu_buffer():len()
+        -- When a TCP segment contains multiple lightning message and last one is split across TCP segments,
+        -- we need to store where the lightning message starts for next dissector call.
         pinfo.desegment_offset = offset
+        -- Terminate current dissector call, and retry when a next TCP segment comes.
         return
       end
 
