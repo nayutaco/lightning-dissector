@@ -47,20 +47,7 @@ local function deserialize(packed_msg)
   return result
 end
 
-local PduAnalyzer = class("PduAnalyzer")
-
-function PduAnalyzer:initialize(secret_cache)
-  self.secret_cache = secret_cache
-end
-
-function PduAnalyzer:analyze(pinfo, buffer)
-  local secret = self.secret_cache:find_or_create(pinfo, buffer)
-  if secret == nil then
-    return {
-      Note = "Decryption key not found. maybe still in handshake phase."
-    }
-  end
-
+local function analyze(pinfo, buffer, secret)
   local secret_before_decryption = secret:clone()
 
   local packed_encrypted_len = buffer():raw(0, constants.lengths.length)
@@ -83,13 +70,6 @@ function PduAnalyzer:analyze(pinfo, buffer)
   local packed_decrypted_msg = secret:decrypt(packed_encrypted_msg, packed_msg_mac)
 
   return {
-    Secret = {
-      Key = bin.stohex(secret_before_decryption:packed_key()),
-      Nonce = {
-        Raw = bin.stohex(secret_before_decryption:packed_nonce()),
-        Deserialized = secret_before_decryption.nonce
-      }
-    },
     Length = {
       Encrypted = bin.stohex(packed_encrypted_len),
       MAC = bin.stohex(packed_len_mac),
@@ -105,4 +85,6 @@ function PduAnalyzer:analyze(pinfo, buffer)
   }
 end
 
-return PduAnalyzer
+return {
+  analyze = analyze
+}

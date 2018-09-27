@@ -9,7 +9,7 @@ local SecretCachePerHost = require("lightning-dissector.secret-cache").SecretCac
 local CompositeSecretFactory = require("lightning-dissector.secret-factory").CompositeSecretFactory
 local PtarmSecretFactory = require("lightning-dissector.secret-factory").PtarmSecretFactory
 local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
-local PduAnalyzer = require "lightning-dissector.pdu-analyzer"
+local pdu_analyzer = require "lightning-dissector.pdu-analyzer"
 local constants = require "lightning-dissector.constants"
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
@@ -29,7 +29,7 @@ local function display(tree, analyzed_frame)
   end
 end
 
-local pdu_analyzer
+local secret_cache
 
 function protocol.init()
   local secret_factories = {}
@@ -42,15 +42,7 @@ function protocol.init()
     table.insert(secret_factories, EclairSecretFactory:new(eclair_key_path))
   end
 
-  pdu_analyzer = PduAnalyzer:new(
-    SecretCachePerPdu:new(
-      SecretCachePerHost:new(
-        CompositeSecretFactory:new(
-          secret_factories
-        )
-      )
-    )
-  )
+  secret_cache = SecretCachePerPdu:new(SecretCachePerHost:new(CompositeSecretFactory:new(secret_factories)))
 end
 
 function protocol.dissector(buffer, pinfo, tree)
@@ -58,7 +50,18 @@ function protocol.dissector(buffer, pinfo, tree)
 
   local offset = pinfo.desegment_offset or 0
   while offset < buffer:len() do
-    local analyzed_pdu = pdu_analyzer:analyze(pinfo, buffer(offset):tvb())
+    local analyzed_pdu
+
+    local secret = secret_cache:find_or_create(pinfo, buffer)
+    if secret == nil then
+      analyzed_pdu =  {
+        Note = "Decryption key not found. maybe still in handshake phase."
+      }
+    else
+      local secret_before_decryption = secret:clone()
+      analyzed_pdu = pdu_analyzer.analyze(pinfo, buffer(offset):tvb(), secret)
+      analyzed_pdu.Secret = secret_before_decryption:display()
+    end
 
     if 0 < pinfo.desegment_len then
       pinfo.desegment_offset = offset
