@@ -20,10 +20,10 @@ local function find_deserializer_for(type)
   end
 end
 
-local function deserialize(packed_msg)
-  local packed_type = packed_msg:sub(1, 2)
+local function deserialize(packed_payload)
+  local packed_type = packed_payload:sub(1, 2)
   local type = string.unpack(">I2", packed_type)
-  local payload = packed_msg:sub(3)
+  local payload = packed_payload:sub(3)
 
   local result = {
     Type = {
@@ -72,7 +72,7 @@ end
 local function analyze_payload(buffer, secret)
   local payload_length = buffer:len() - constants.lengths.footer
   local packed_encrypted = buffer:raw(0, payload_length)
-  local packed_mac = buffer:raw(payload_length, constants.lengths.message_mac)
+  local packed_mac = buffer:raw(payload_length, constants.lengths.payload_mac)
   local packed_decrypted = secret:decrypt(packed_encrypted, packed_mac)
 
   return {

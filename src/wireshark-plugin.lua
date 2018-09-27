@@ -76,7 +76,7 @@ function protocol.dissector(buffer, pinfo, tree)
 
       analyzed_pdu.Secret = secret:display()
       analyzed_pdu.Length = payload_length.display()
-      analyzed_pdu.Message = payload.display()
+      analyzed_pdu.Payload = payload.display()
       offset = offset + whole_length
     end
 
