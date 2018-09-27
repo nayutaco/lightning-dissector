@@ -18,8 +18,8 @@ protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/ecla
 protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
 protocol.prefs.note2 = Pref.statictext("Reload lightning-dissector by Shift+Ctrl+L to make changes take effect.")
 
-local function display(tree, analyzed_frame)
-  for key, value in pairs(analyzed_frame) do
+local function display(tree, analyzed_pdu)
+  for key, value in pairs(analyzed_pdu) do
     if type(value) == "table" then
       local subtree = tree:add(key .. ":")
       display(subtree, value)
