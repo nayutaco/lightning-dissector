@@ -39,7 +39,8 @@ function NodeAnnouncementDeserializer:deserialize(payload)
 
       local building_ipv4_addr = {}
       for i = 1, 4 do
-        table.insert(string.unpack(">I1", packed_ipv4_addr:sub(i, i)))
+        local one_byte = string.unpack(">I1", packed_ipv4_addr:sub(i, i))
+        table.insert(building_ipv4_addr, one_byte)
       end
 
       local ipv4_addr = table.concat(building_ipv4_addr, ".")
@@ -55,8 +56,9 @@ function NodeAnnouncementDeserializer:deserialize(payload)
       local packed_port = addresses_reader:read(2)
 
       local building_ipv6_addr = {}
-      for i = 1, 8, 2 do
-        table.insert(bin.stohex(packed_ipv6_addr:sub(i, i + 1)))
+      for i = 1, 16, 2 do
+        local two_byte = bin.stohex(packed_ipv6_addr:sub(i, i + 1))
+        table.insert(building_ipv6_addr, two_byte)
       end
 
       local ipv6_addr = table.concat(building_ipv6_addr, ":")
