@@ -38,24 +38,10 @@ function ChannelUpdateDeserializer:deserialize(payload)
   end
 
   local channel_flags = string.unpack(">I1", packed_channel_flags)
-  local defined_channel_flags = {"direction", "disable"}
-
-  -- TODO: Refactoring: same logic is used by InitDeserializer. DRY.
-  local channel_flags_to_show = {}
-  for bit_position, flag_name in pairs(defined_channel_flags) do
-    local channel_flags_bits = {}
-    for i = 1, 8 do
-      channel_flags_bits[i] = "0"
-    end
-
-    channel_flags_bits[bit_position] = 1
-    local channel_flags_mask = tonumber(table.concat(channel_flags_bits), 2)
-
-    local is_flag_on = bit32.band(channel_flags, channel_flags_mask)
-    if is_flag_on then
-      table.insert(channel_flags_to_show, flag_name)
-    end
-  end
+  local channel_flags_display = {
+    direction = 0 < bit32.band(channel_flags, tonumber("10000000", 2)),
+    disable = 0 < bit32.band(channel_flags, tonumber("01000000", 2))
+  }
 
   local result = {
     signature = bin.stohex(packed_signature),
@@ -71,7 +57,7 @@ function ChannelUpdateDeserializer:deserialize(payload)
     },
     channel_flags = {
       Raw = bin.stohex(packed_channel_flags),
-      Deserialized = inspect(channel_flags_to_show)
+      Deserialized = inspect(channel_flags_display)
     },
     cltv_expiry_delta = {
       Raw = bin.stohex(packed_cltv_expiry_delta),
