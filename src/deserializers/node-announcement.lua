@@ -27,10 +27,6 @@ function NodeAnnouncementDeserializer:deserialize(payload)
 
   local timestamp = string.unpack(">I4", packed_timestamp)
 
-  local r = string.unpack(">I1", packed_rgb_color:sub(1, 1))
-  local g = string.unpack(">I1", packed_rgb_color:sub(2, 2))
-  local b = string.unpack(">I1", packed_rgb_color:sub(3, 3))
-
   local addresses = {}
   local addresses_reader = Reader:new(packed_addresses)
   while not addresses_reader:is_finished() do
@@ -107,14 +103,7 @@ function NodeAnnouncementDeserializer:deserialize(payload)
       Deserialized = timestamp
     },
     node_id = bin.stohex(packed_node_id),
-    rgb_color = {
-      Raw = bin.stohex(packed_rgb_color),
-      Deserialized = {
-        R = r,
-        G = g,
-        B = b
-      }
-    },
+    rgb_color = "#" .. bin.stohex(packed_rgb_color),
     alias = alias,
     addrlen = {
       Raw = bin.stohex(packed_addrlen),
