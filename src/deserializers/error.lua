@@ -14,7 +14,7 @@ function ErrorDeserializer:deserialize(payload)
 
   local packed_channel_id = reader:read(32)
   local packed_len = reader:read(2)
-  local len = string.unpack(">I2", reader:read(2))
+  local len = string.unpack(">I2", packed_len)
   local data = reader:read(len)
 
   return {
