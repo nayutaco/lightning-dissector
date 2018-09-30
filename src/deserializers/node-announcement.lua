@@ -2,6 +2,7 @@ local class = require "middleclass"
 local bin = require "plc52.bin"
 local basexx = require "basexx"
 local Reader = require("lightning-dissector.utils").Reader
+local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 
 NodeAnnouncementDeserializer = class("NodeAnnouncementDeserializer")
 
@@ -94,7 +95,10 @@ function NodeAnnouncementDeserializer:deserialize(payload)
   end
 
   return {
-    signature = bin.stohex(packed_signature),
+    signature = {
+      Raw = bin.stohex(packed_signature),
+      DER = bin.stohex(convert_signature_der(packed_signature))
+    },
     flen = {
       Raw = bin.stohex(packed_flen),
       Deserialized = flen

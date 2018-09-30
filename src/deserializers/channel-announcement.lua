@@ -1,6 +1,7 @@
 local class = require "middleclass"
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
+local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 
 local ChannelAnnouncementDeserializer = class("ChannelAnnouncementDeserializer")
 
@@ -27,10 +28,22 @@ function ChannelAnnouncementDeserializer:deserialize(payload)
   local packed_bitcoin_key_2 = reader:read(33)
 
   return {
-    node_signature_1 = bin.stohex(packed_node_signature_1),
-    node_signature_2 = bin.stohex(packed_node_signature_2),
-    bitcoin_signature_1 = bin.stohex(packed_bitcoin_signature_1),
-    bitcoin_signature_2 = bin.stohex(packed_bitcoin_signature_2),
+    node_signature_1 = {
+      Raw = bin.stohex(packed_node_signature_1),
+      DER = bin.stohex(convert_signature_der(packed_node_signature_1))
+    },
+    node_signature_2 = {
+      Raw = bin.stohex(packed_node_signature_2),
+      DER = bin.stohex(convert_signature_der(packed_node_signature_2))
+    },
+    bitcoin_signature_1 = {
+      Raw = bin.stohex(packed_bitcoin_signature_1),
+      DER = bin.stohex(convert_signature_der(packed_bitcoin_signature_1))
+    },
+    bitcoin_signature_2 = {
+      Raw = bin.stohex(packed_bitcoin_signature_2),
+      DER = bin.stohex(convert_signature_der(packed_bitcoin_signature_2))
+    },
     len = {
       Raw = bin.stohex(packed_len),
       Deserialized = len

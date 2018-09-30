@@ -2,6 +2,7 @@ local class = require "middleclass"
 local inspect = require "inspect"
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
+local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 
 local ChannelUpdateDeserializer = class("ChannelUpdateDeserializer")
 
@@ -44,7 +45,10 @@ function ChannelUpdateDeserializer:deserialize(payload)
   }
 
   local result = {
-    signature = bin.stohex(packed_signature),
+    signature = {
+      Raw = bin.stohex(packed_signature),
+      DER = bin.stohex(convert_signature_der(packed_signature))
+    },
     chain_hash = bin.stohex(packed_chain_hash),
     short_channel_id = bin.stohex(packed_short_channel_id),
     timestamp = {
