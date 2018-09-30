@@ -19,4 +19,6 @@ function Reader:is_finished()
   return self.payload:len() <= self.offset
 end
 
-return Reader
+return {
+  Reader = Reader
+}

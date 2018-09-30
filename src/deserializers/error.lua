@@ -1,6 +1,6 @@
 local class = require "middleclass"
 local bin = require "plc52.bin"
-local Reader = require "lightning-dissector.utils.reader"
+local Reader = require("lightning-dissector.utils").Reader
 
 local ErrorDeserializer = class("ErrorDeserializer")
 
