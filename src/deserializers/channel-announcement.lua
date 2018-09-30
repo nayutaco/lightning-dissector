@@ -1,16 +1,8 @@
-local class = require "middleclass"
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 
-local ChannelAnnouncementDeserializer = class("ChannelAnnouncementDeserializer")
-
-function ChannelAnnouncementDeserializer:initialize()
-  self.number = 256
-  self.name = "channel_announcement"
-end
-
-function ChannelAnnouncementDeserializer:deserialize(payload)
+function deserialize(payload)
   local reader = Reader:new(payload)
 
   local packed_node_signature_1 = reader:read(64)
@@ -58,4 +50,8 @@ function ChannelAnnouncementDeserializer:deserialize(payload)
   }
 end
 
-return ChannelAnnouncementDeserializer
+return {
+  number = 256,
+  name = "channel_announcement",
+  deserialize = deserialize
+}

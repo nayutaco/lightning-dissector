@@ -1,17 +1,9 @@
-local class = require "middleclass"
 local inspect = require "inspect"
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 
-local ChannelUpdateDeserializer = class("ChannelUpdateDeserializer")
-
-function ChannelUpdateDeserializer:initialize()
-  self.name = "channel_update"
-  self.number = 258
-end
-
-function ChannelUpdateDeserializer:deserialize(payload)
+function deserialize(payload)
   local reader = Reader:new(payload)
 
   local packed_signature = reader:read(64)
@@ -94,4 +86,8 @@ function ChannelUpdateDeserializer:deserialize(payload)
   return result
 end
 
-return ChannelUpdateDeserializer
+return {
+  name = "channel_update",
+  number = 258,
+  deserialize = deserialize
+}

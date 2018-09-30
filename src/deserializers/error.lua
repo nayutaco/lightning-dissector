@@ -1,15 +1,7 @@
-local class = require "middleclass"
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 
-local ErrorDeserializer = class("ErrorDeserializer")
-
-function ErrorDeserializer:initialize()
-  self.number = 17
-  self.name = "error"
-end
-
-function ErrorDeserializer:deserialize(payload)
+function deserialize(payload)
   local reader = Reader:new(payload)
 
   local packed_channel_id = reader:read(32)
@@ -30,4 +22,8 @@ function ErrorDeserializer:deserialize(payload)
   }
 end
 
-return ErrorDeserializer
+return {
+  number = 17,
+  name = "error",
+  deserialize = deserialize
+}

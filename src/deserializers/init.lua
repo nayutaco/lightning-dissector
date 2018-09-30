@@ -1,16 +1,8 @@
-local class = require "middleclass"
 local bin = require "plc52.bin"
 local inspect = require "inspect"
 local Reader = require("lightning-dissector.utils").Reader
 
-local InitDeserializer = class("InitDeserializer")
-
-function InitDeserializer:initialize()
-  self.number = 16
-  self.name = "init"
-end
-
-function InitDeserializer:deserialize(payload)
+function deserialize(payload)
   local defined_local_features = {
     [0] = "option_data_loss_protect",
     [1] = "option_data_loss_protect",
@@ -67,4 +59,8 @@ function InitDeserializer:deserialize(payload)
   }
 end
 
-return InitDeserializer
+return {
+  number = 16,
+  name = "init",
+  deserialize = deserialize
+}

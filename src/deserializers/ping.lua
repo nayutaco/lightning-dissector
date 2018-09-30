@@ -1,15 +1,7 @@
-local class = require "middleclass"
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 
-local PingDeserializer = class("PingDeserializer")
-
-function PingDeserializer:initialize()
-  self.number = 18
-  self.name = "ping"
-end
-
-function PingDeserializer:deserialize(payload)
+function deserialize(payload)
   local reader = Reader:new(payload)
 
   local packed_num_pong_bytes = reader:read(2)
@@ -31,4 +23,8 @@ function PingDeserializer:deserialize(payload)
   }
 end
 
-return PingDeserializer
+return {
+  number = 18,
+  name = "ping",
+  deserialize = deserialize
+}

@@ -3,13 +3,13 @@ local bin = require "plc52.bin"
 local constants = require "lightning-dissector.constants"
 
 local deserializers = {
-  require("lightning-dissector.deserializers.init"):new(),
-  require("lightning-dissector.deserializers.ping"):new(),
-  require("lightning-dissector.deserializers.pong"):new(),
-  require("lightning-dissector.deserializers.error"):new(),
-  require("lightning-dissector.deserializers.channel-announcement"):new(),
-  require("lightning-dissector.deserializers.channel-update"):new(),
-  require("lightning-dissector.deserializers.node-announcement"):new()
+  require("lightning-dissector.deserializers.init"),
+  require("lightning-dissector.deserializers.ping"),
+  require("lightning-dissector.deserializers.pong"),
+  require("lightning-dissector.deserializers.error"),
+  require("lightning-dissector.deserializers.channel-announcement"),
+  require("lightning-dissector.deserializers.channel-update"),
+  require("lightning-dissector.deserializers.node-announcement")
 }
 
 local function find_deserializer_for(type)
@@ -39,7 +39,7 @@ local function deserialize(packed_payload)
 
   result.Type.Name = deserializer.name
 
-  local deserialized = deserializer:deserialize(payload)
+  local deserialized = deserializer.deserialize(payload)
   for key, value in pairs(deserialized) do
     result[key] = value
   end
