@@ -2,6 +2,7 @@ local bin = require "plc52.bin"
 local basexx = require "basexx"
 local Reader = require("lightning-dissector.utils").Reader
 local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
+local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -20,7 +21,7 @@ function deserialize(payload)
 
   local timestamp = string.unpack(">I4", packed_timestamp)
 
-  local addresses = {}
+  local addresses = OrderedDict:new()
   local addresses_reader = Reader:new(packed_addresses)
   while not addresses_reader:is_finished() do
     local packed_address_type = addresses_reader:read(1)
@@ -39,11 +40,12 @@ function deserialize(payload)
       local ipv4_addr = table.concat(building_ipv4_addr, ".")
       local port = string.unpack(">I2", packed_port)
 
-      table.insert(addresses, {
-        type = "IPv4",
-        addr = ipv4_addr,
-        port = port
-      })
+      table.insert(addresses, OrderedDict:new(
+        "type", "IPv4",
+        "addr", ipv4_addr,
+        "port", port
+      ))
+
     elseif address_type == 2 then
       local packed_ipv6_addr = addresses_reader:read(16)
       local packed_port = addresses_reader:read(2)
@@ -57,61 +59,61 @@ function deserialize(payload)
       local ipv6_addr = table.concat(building_ipv6_addr, ":")
       local port = string.unpack(">I2", packed_port)
 
-      table.insert(addresses, {
-        type = "IPv6",
-        addr = ipv6_addr,
-        port = port
-      })
+      table.insert(addresses, OrderedDict:new(
+        "type", "IPv6",
+        "addr", ipv6_addr,
+        "port", port
+      ))
     elseif address_type == 3 then
       local packed_v2_onion_addr = addresses_reader:read(10)
       local v2_onion_addr = basexx.to_base32(packed_v2_onion_addr)
       local packed_port = addresses_reader:read(2)
 
-      table.insert({
-        type = "Tor v2 onion service",
-        addr = v2_onion_addr .. ".onion",
-        port = string.unpack(">I2", packed_port)
-      })
+      table.insert(addresses, OrderedDict:new(
+        "type", "Tor v2 onion service",
+        "addr", v2_onion_addr .. ".onion",
+        "port", string.unpack(">I2", packed_port)
+      ))
     elseif address_type == 4 then
       local packed_v3_onion_addr = addresses_reader:read(32)
       local v3_onion_addr = basexx.to_base32(packed_v3_onion_addr)
       addresses_reader:read(3)  -- skip checksum
       local packed_port = addresses_reader:read(2)
 
-      table.insert({
-        type = "Tor v2 onion service",
-        addr = v3_onion_addr .. ".onion",
-        port = string.unpack(">I2", packed_port)
-      })
+      table.insert(addresses, OrderedDict:new(
+        "type", "Tor v2 onion service",
+        "addr", v3_onion_addr .. ".onion",
+        "port", string.unpack(">I2", packed_port)
+      ))
     end
   end
 
-  return {
-    signature = {
-      Raw = bin.stohex(packed_signature),
-      DER = bin.stohex(convert_signature_der(packed_signature))
-    },
-    flen = {
-      Raw = bin.stohex(packed_flen),
-      Deserialized = flen
-    },
-    features = bin.stohex(packed_features),
-    timestamp = {
-      Raw = bin.stohex(packed_timestamp),
-      Deserialized = timestamp
-    },
-    node_id = bin.stohex(packed_node_id),
-    rgb_color = "#" .. bin.stohex(packed_rgb_color),
-    alias = alias,
-    addrlen = {
-      Raw = bin.stohex(packed_addrlen),
-      Deserialized = addrlen
-    },
-    addresses = {
-      Raw = bin.stohex(packed_addresses),
-      Deserialized = addresses
-    }
-  }
+  return OrderedDict:new(
+    "signature", OrderedDict:new(
+      "Raw", bin.stohex(packed_signature),
+      "DER", bin.stohex(convert_signature_der(packed_signature))
+    ),
+    "flen", OrderedDict:new(
+      "Raw", bin.stohex(packed_flen),
+      "Deserialized", flen
+    ),
+    "features", bin.stohex(packed_features),
+    "timestamp", OrderedDict:new(
+      "Raw", bin.stohex(packed_timestamp),
+      "Deserialized", timestamp
+    ),
+    "node_id", bin.stohex(packed_node_id),
+    "rgb_color", "#" .. bin.stohex(packed_rgb_color),
+    "alias", alias,
+    "addrlen", OrderedDict:new(
+      "Raw", bin.stohex(packed_addrlen),
+      "Deserialized", addrlen
+    ),
+    "addresses", OrderedDict:new(
+      "Raw", bin.stohex(packed_addresses),
+      "Deserialized", addresses
+    )
+  )
 end
 
 return {

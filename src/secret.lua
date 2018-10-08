@@ -2,6 +2,7 @@ local class = require "middleclass"
 local chacha20 = require "plc52.chacha20"
 local poly1305 = require "poly1305"
 local bin = require "plc52.bin"
+local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 local function pad16(s)
   return (#s % 16 == 0) and "" or ('\0'):rep(16 - (#s % 16))
@@ -54,13 +55,13 @@ function Secret:clone()
 end
 
 function Secret:display()
-  return {
-    Key = bin.stohex(self:packed_key()),
-    Nonce = {
-      Raw = bin.stohex(self:packed_nonce()),
-      Deserialized = self.nonce
-    }
-  }
+  return OrderedDict:new(
+    "Key", bin.stohex(self:packed_key()),
+    "Nonce", OrderedDict:new(
+      "Raw", bin.stohex(self:packed_nonce()),
+      "Deserialized", self.nonce
+    )
+  )
 end
 
 return Secret

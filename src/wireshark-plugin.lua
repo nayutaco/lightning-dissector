@@ -11,6 +11,7 @@ local KeyLogSecretFactory = require("lightning-dissector.secret-factory").KeyLog
 local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
 local pdu_analyzer = require "lightning-dissector.pdu-analyzer"
 local constants = require "lightning-dissector.constants"
+local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
 protocol.prefs.key_log_paths = Pref.string("Key log file", "~/.cache/ptarmigan/keys.log")
@@ -53,11 +54,11 @@ function protocol.dissector(buffer, pinfo, tree)
   -- Until we analyze all lightning messages in a TCP segment
   while offset < buffer:len() do
     local pdu_buffer = buffer(offset):tvb()
-    local analyzed_pdu = {}
+    local analyzed_pdu = OrderedDict:new()
 
     local secret = secret_cache:find_or_create(pinfo, pdu_buffer)
     if secret == nil then
-      analyzed_pdu.Note = "Decryption key not found. maybe still in handshake phase."
+      analyzed_pdu:append("Note", "Decryption key not found. maybe still in handshake phase.")
       -- Finish the while loop.
       offset = buffer:len()
     else
@@ -85,9 +86,9 @@ function protocol.dissector(buffer, pinfo, tree)
         pdu_buffer(constants.lengths.header, payload_length.deserialized + constants.lengths.footer):tvb()
       local payload = pdu_analyzer.analyze_payload(payload_buffer, secret)
 
-      analyzed_pdu.Secret = secret:display()
-      analyzed_pdu.Length = payload_length.display()
-      analyzed_pdu.Payload = payload.display()
+      analyzed_pdu:append("Secret", secret:display())
+      analyzed_pdu:append("Length", payload_length.display())
+      analyzed_pdu:append("Payload", payload.display())
       offset = offset + whole_length
     end
 

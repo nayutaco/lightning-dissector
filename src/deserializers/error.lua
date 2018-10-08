@@ -1,5 +1,6 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
+local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -9,17 +10,17 @@ function deserialize(payload)
   local len = string.unpack(">I2", packed_len)
   local data = reader:read(len)
 
-  return {
-    channel_id = bin.stohex(packed_channel_id),
-    len = {
-      Raw = bin.stohex(packed_len),
-      Deserialized = len
-    },
-    data = {
-      Raw = bin.stohex(data),
-      Deserialized = data
-    }
-  }
+  return OrderedDict:new(
+    "channel_id", bin.stohex(packed_channel_id),
+    "len", OrderedDict:new(
+      "Raw", bin.stohex(packed_len),
+      "Deserialized", len
+    ),
+    "data", OrderedDict:new(
+      "Raw", bin.stohex(data),
+      "Deserialized", data
+    )
+  )
 end
 
 return {

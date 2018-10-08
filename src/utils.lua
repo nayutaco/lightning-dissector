@@ -20,6 +20,38 @@ function Reader:is_finished()
   return self.payload:len() <= self.offset
 end
 
+local OrderedDict = class("OrderedDict")
+
+function OrderedDict:initialize(...)
+  local args = {...}
+  self.keys = {}
+  self.values = {}
+
+  for i = 1, #args do
+    self.keys[i] = args[(i - 1) * 2 + 1]
+    self.values[i] = args[(i - 1) * 2 + 2]
+  end
+end
+
+function OrderedDict:append(key, value)
+  table.insert(self.keys, key)
+  table.insert(self.values, value)
+end
+
+function OrderedDict:__pairs()
+  local i = 0
+
+  return function()
+    i = i + 1
+
+    if #self.keys < i then
+      return nil
+    else
+      return self.keys[i], self.values[i]
+    end
+  end
+end
+
 function encode_signature_der(packed_r, packed_s)
   local packed_integers = {packed_r, packed_s}
   local packed_encoded_integers = {}
@@ -48,6 +80,7 @@ end
 
 return {
   Reader = Reader,
+  OrderedDict = OrderedDict,
   encode_signature_der = encode_signature_der,
   convert_signature_der = convert_signature_der
 }

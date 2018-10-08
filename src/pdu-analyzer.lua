@@ -1,4 +1,4 @@
-local class = require "middleclass"
+local OrderedDict = require("lightning-dissector.utils").OrderedDict
 local bin = require "plc52.bin"
 local constants = require "lightning-dissector.constants"
 
@@ -25,23 +25,27 @@ local function deserialize(packed_payload)
   local type = string.unpack(">I2", packed_type)
   local payload = packed_payload:sub(3)
 
-  local result = {
-    Type = {
-      Raw = bin.stohex(packed_type),
-      Number = type
-    }
-  }
-
   local deserializer = find_deserializer_for(type)
   if deserializer == nil then
-    return result
+    return OrderedDict:new(
+      "Type", OrderedDict:new(
+        "Raw", bin.stohex(packed_type),
+        "Number", type
+      )
+    )
   end
 
-  result.Type.Name = deserializer.name
+  local result = OrderedDict:new(
+    "Type", OrderedDict:new(
+      "Raw", bin.stohex(packed_type),
+      "Name", deserializer.name,
+      "Number", type
+    )
+  )
 
   local deserialized = deserializer.deserialize(payload)
   for key, value in pairs(deserialized) do
-    result[key] = value
+    result:append(key, value)
   end
 
   return result
@@ -59,12 +63,12 @@ local function analyze_length(buffer, secret)
     packed_decrypted = packed_decrypted,
     deserialized = deserialized,
     display = function()
-      return {
-        Encrypted = bin.stohex(packed_encrypted),
-        Decrypted = bin.stohex(packed_decrypted),
-        Deserialized = deserialized,
-        MAC = bin.stohex(packed_mac)
-      }
+      return OrderedDict:new(
+        "Encrypted", bin.stohex(packed_encrypted),
+        "Decrypted", bin.stohex(packed_decrypted),
+        "Deserialized", deserialized,
+        "MAC", bin.stohex(packed_mac)
+      )
     end
   }
 end
@@ -80,12 +84,12 @@ local function analyze_payload(buffer, secret)
     packed_mac = packed_mac,
     packed_decrypted = packed_decrypted,
     display = function()
-      return {
-        Encrypted = bin.stohex(packed_encrypted),
-        MAC = bin.stohex(packed_mac),
-        Decrypted = bin.stohex(packed_decrypted),
-        Deserialized = deserialize(packed_decrypted)
-      }
+      return OrderedDict:new(
+        "Encrypted", bin.stohex(packed_encrypted),
+        "MAC", bin.stohex(packed_mac),
+        "Decrypted", bin.stohex(packed_decrypted),
+        "Deserialized", deserialize(packed_decrypted)
+      )
     end
   }
 end

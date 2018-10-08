@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local inspect = require "inspect"
 local Reader = require("lightning-dissector.utils").Reader
+local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 function deserialize(payload)
   local defined_local_features = {
@@ -39,24 +40,24 @@ function deserialize(payload)
     end
   end
 
-  return {
-    gflen = {
-      Raw = bin.stohex(packed_gflen),
-      Deserialized = gflen
-    },
-    global_features = bin.stohex(packed_global_features),
-    lflen = {
-      Raw = bin.stohex(packed_lflen),
-      Deserialized = lflen
-    },
-    local_features = {
-      Raw = bin.stohex(packed_local_features),
-      Deserialized = {
-        Optional = inspect(optional_features),
-        Required = inspect(required_features)
-      }
-    }
-  }
+  return OrderedDict:new(
+    "gflen", OrderedDict:new(
+      "Raw", bin.stohex(packed_gflen),
+      "Deserialized", gflen
+    ),
+    "global_features", bin.stohex(packed_global_features),
+    "lflen", OrderedDict:new(
+      "Raw", bin.stohex(packed_lflen),
+      "Deserialized", lflen
+    ),
+    "local_features", OrderedDict:new(
+      "Raw", bin.stohex(packed_local_features),
+      "Deserialized", OrderedDict:new(
+        "Optional", inspect(optional_features),
+        "Required", inspect(required_features)
+      )
+    )
+  )
 end
 
 return {
