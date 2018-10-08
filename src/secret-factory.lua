@@ -10,20 +10,20 @@ function SecretFactory:create(buffer)
   error("Not implemented")
 end
 
-local PtarmSecretFactory = class("PtarmSecretFactory", SecretFactory)
+local KeyLogSecretFactory = class("KeyLogSecretFactory", SecretFactory)
 
-function PtarmSecretFactory:initialize(log_path)
+function KeyLogSecretFactory:initialize(log_path)
   self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
 end
 
-function PtarmSecretFactory:create(buffer)
+function KeyLogSecretFactory:create(buffer)
   local packed_length_mac = buffer:raw(constants.lengths.length, constants.lengths.length_mac)
   local length_mac = bin.stohex(packed_length_mac)
 
   -- First, assume nonce of the message is 0, and search key for the message
   local log_file = io.open(self.log_path)
   if log_file == nil then
-    info('A preference "Ptarmigan key file" refers to non-existent file')
+    info('A preference "Key log file" refers to non-existent file')
     return
   end
 
@@ -93,6 +93,6 @@ end
 
 return {
   CompositeSecretFactory = CompositeSecretFactory,
-  PtarmSecretFactory = PtarmSecretFactory,
+  KeyLogSecretFactory = KeyLogSecretFactory,
   EclairSecretFactory = EclairSecretFactory
 }

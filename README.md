@@ -30,7 +30,7 @@ mkdir ~/.cache/ptarmigan
 export LIGHTNINGKEYLOGFILE=~/.cache/ptarmigan/keys.log 
 ```
 
-You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Ptarmigan key file` preference same. (~/.cache/ptarmigan/keys.log by default)
+You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Key log file` preference same. (~/.cache/ptarmigan/keys.log by default)
 
 ## Status
 ### Supported implementations

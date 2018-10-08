@@ -7,13 +7,13 @@ package.path = os.getenv("HOME")
 local SecretCachePerPdu = require("lightning-dissector.secret-cache").SecretCachePerPdu
 local SecretCachePerHost = require("lightning-dissector.secret-cache").SecretCachePerHost
 local CompositeSecretFactory = require("lightning-dissector.secret-factory").CompositeSecretFactory
-local PtarmSecretFactory = require("lightning-dissector.secret-factory").PtarmSecretFactory
+local KeyLogSecretFactory = require("lightning-dissector.secret-factory").KeyLogSecretFactory
 local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
 local pdu_analyzer = require "lightning-dissector.pdu-analyzer"
 local constants = require "lightning-dissector.constants"
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
-protocol.prefs.ptarmigan_key_paths = Pref.string("Ptarmigan key file", "~/.cache/ptarmigan/keys.log")
+protocol.prefs.key_log_paths = Pref.string("Key log file", "~/.cache/ptarmigan/keys.log")
 protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/eclair.log")
 protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
 protocol.prefs.note2 = Pref.statictext("Reload lightning-dissector by Shift+Ctrl+L to make changes take effect.")
@@ -34,8 +34,8 @@ local secret_cache
 function protocol.init()
   local secret_factories = {}
 
-  for ptarmigan_key_path in protocol.prefs.ptarmigan_key_paths:gmatch("[^:]+") do
-    table.insert(secret_factories, PtarmSecretFactory:new(ptarmigan_key_path))
+  for key_log_path in protocol.prefs.key_log_paths:gmatch("[^:]+") do
+    table.insert(secret_factories, KeyLogSecretFactory:new(key_log_path))
   end
 
   for eclair_key_path in protocol.prefs.eclair_key_paths:gmatch("[^:]+") do
