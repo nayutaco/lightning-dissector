@@ -5,7 +5,9 @@ A wireshark plugin to analyze communication between Lightning Network nodes
 
 ## Installation
 ```bash
-luarocks --local install lightning-dissector
+git clone https://github.com/nayutaco/lightning-dissector.git --recursive
+cd lightning-dissector
+luarocks --local make
 mkdir -p ~/.config/wireshark/plugins
 ln -s ~/.luarocks/share/lua/5.2/lightning-dissector/wireshark-plugin.lua ~/.config/wireshark/plugins/lightning-dissector.lua
 ```
