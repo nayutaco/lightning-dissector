@@ -24,6 +24,12 @@ sed -i 's/<root level="INFO">/<root level="DEBUG">/' eclair-node/src/main/resour
 You can set location for the debug log by `Edit Menu -> Preferences -> Protocols -> LIGHTNING`. (~/.eclair/eclair.log by default)
 
 ### Ptarmigan
+You need to build ptarmigan with developer mode enabled.
+```bash
+sed -i 's/ENABLE_DEVELOPER_MODE=0/ENABLE_DEVELOPER_MODE=1/g' options.mak
+make full
+```
+
 Set `$LIGHTNINGKEYLOGFILE` before starting ptarmigan.  
 ptarmigan dumps decryption keys to there.
 
