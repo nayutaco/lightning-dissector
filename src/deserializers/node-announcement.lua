@@ -23,7 +23,7 @@ function deserialize(payload)
 
   local addresses = OrderedDict:new()
   local addresses_reader = Reader:new(packed_addresses)
-  while not addresses_reader:is_finished() do
+  while addresses_reader:has_next() do
     local packed_address_type = addresses_reader:read(1)
     local address_type = string.unpack(">I1", packed_address_type)
 

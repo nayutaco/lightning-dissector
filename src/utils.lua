@@ -16,8 +16,8 @@ function Reader:read(how_many)
   return result
 end
 
-function Reader:is_finished()
-  return self.payload:len() <= self.offset
+function Reader:has_next()
+  return self.payload:len() > self.offset
 end
 
 local OrderedDict = class("OrderedDict")
