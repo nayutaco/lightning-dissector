@@ -78,9 +78,24 @@ function convert_signature_der(packed_signature)
   return encode_signature_der(packed_r, packed_s)
 end
 
+function deserialize_flags(packed_byte, defined_flags)
+  local byte = string.unpack(">I1", packed_byte)
+
+  local enabled_flags = {}
+  for i, flag in pairs(defined_flags) do
+    local mask = bit32.rshift(tonumber("10000000", 2), i - 1)
+    if 0 < bit32.band(byte, mask) then
+      table.insert(enabled_flags, flag)
+    end
+  end
+
+  return enabled_flags
+end
+
 return {
   Reader = Reader,
   OrderedDict = OrderedDict,
   encode_signature_der = encode_signature_der,
-  convert_signature_der = convert_signature_der
+  convert_signature_der = convert_signature_der,
+  deserialize_flags = deserialize_flags
 }
