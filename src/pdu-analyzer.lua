@@ -15,7 +15,7 @@ local deserializers = {
 }
 
 local function find_deserializer_for(type)
-  for _, deserializer in pairs(deserializers) do
+  for _, deserializer in ipairs(deserializers) do
     if deserializer.number == type then
       return deserializer
     end

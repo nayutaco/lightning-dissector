@@ -55,7 +55,7 @@ end
 function encode_signature_der(packed_r, packed_s)
   local packed_integers = {packed_r, packed_s}
   local packed_encoded_integers = {}
-  for _, integer in pairs(packed_integers) do
+  for _, integer in ipairs(packed_integers) do
     local first_byte = tonumber(bin.stohex(integer:sub(1, 1)), 16)
     -- If the first bit is 0
     if first_byte == bit32.band(first_byte, tonumber("01111111", 2)) then
