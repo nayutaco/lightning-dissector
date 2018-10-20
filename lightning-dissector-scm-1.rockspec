@@ -38,6 +38,7 @@ build = {
     ["lightning-dissector.deserializers.node-announcement"] = "src/deserializers/node-announcement.lua",
     ["lightning-dissector.deserializers.open-channel"] = "src/deserializers/open-channel.lua",
     ["lightning-dissector.deserializers.accept-channel"] = "src/deserializers/accept-channel.lua",
+    ["lightning-dissector.deserializers.funding-created"] = "src/deserializers/funding-created.lua",
     ["lightning-dissector.utils"] = "src/utils.lua",
     ["plc52.bin"] = "plc/plc/bin.lua",
     ["plc52.chacha20"] = "plc/plc/chacha20.lua"
