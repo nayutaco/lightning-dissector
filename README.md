@@ -58,6 +58,14 @@ Currently, lightning-dissector can deserialize
 - channel_announcement
 - node_announcement
 - channel_update
+- node_announcement
+- open_channel
+- accept_channel
+- funding_created
+- funding_signed
+- funding_locked
+- shutdown
+- closing_signed
 
 I'm working on another messages.  
 Contributions by [writing deserializers for another messages](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md#add-support-for-another-message) are welcome.
