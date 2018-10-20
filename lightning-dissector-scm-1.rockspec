@@ -43,6 +43,7 @@ build = {
     ["lightning-dissector.deserializers.funding-signed"] = "src/deserializers/funding-signed.lua",
     ["lightning-dissector.deserializers.funding-locked"] = "src/deserializers/funding-locked.lua",
     ["lightning-dissector.deserializers.shutdown"] = "src/deserializers/shutdown.lua",
+    ["lightning-dissector.deserializers.closing-signed"] = "src/deserializers/closing-signed.lua",
     ["lightning-dissector.utils"] = "src/utils.lua",
     ["plc52.bin"] = "plc/plc/bin.lua",
     ["plc52.chacha20"] = "plc/plc/chacha20.lua"
