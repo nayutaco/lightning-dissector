@@ -26,10 +26,6 @@ function deserialize(payload)
   local packed_first_per_commitment_point = reader:read(33)
   local packed_channel_flags = reader:read(1)
 
-  local channel_flags = deserialize_flags(packed_channel_flags, {
-    [8] = "announce_channel"
-  })
-
   local result = OrderedDict:new(
     "chain_hash", bin.stohex(packed_chain_hash),
     "temporary_channel_id", bin.stohex(packed_temporary_channel_id),
@@ -77,7 +73,7 @@ function deserialize(payload)
     "first_per_commitment_point", bin.stohex(packed_first_per_commitment_point),
     "channel_flags", OrderedDict:new(
       "Raw", bin.stohex(packed_channel_flags),
-      "Deserialized", inspect(channel_flags)
+      "Deserialized", inspect(deserialize_flags(packed_channel_flags, {"announce_channel"}))
     )
   )
 

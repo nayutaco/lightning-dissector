@@ -78,12 +78,12 @@ function convert_signature_der(packed_signature)
   return encode_signature_der(packed_r, packed_s)
 end
 
-function deserialize_flags(packed_byte, defined_flags)
-  local byte = string.unpack(">I1", packed_byte)
+function deserialize_flags(bytes, defined_flags)
+  local byte = string.unpack(">I" .. #bytes, bytes)
 
   local enabled_flags = {}
   for i, flag in pairs(defined_flags) do
-    local mask = bit32.rshift(tonumber("10000000", 2), i - 1)
+    local mask = bit32.lshift(1, i - 1)
     if 0 < bit32.band(byte, mask) then
       table.insert(enabled_flags, flag)
     end
