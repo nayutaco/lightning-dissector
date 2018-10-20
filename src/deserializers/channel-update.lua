@@ -2,6 +2,7 @@ local inspect = require "inspect"
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
+local deserialize_flags = require("lightning-dissector.utils").deserialize_flags
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 function deserialize(payload)
@@ -24,19 +25,6 @@ function deserialize(payload)
   local fee_base_msat = string.unpack(">I4", packed_fee_base_msat)
   local fee_proportional_millionths = string.unpack(">I4", packed_fee_proportional_millionths)
 
-  local message_flags = string.unpack(">I1", packed_message_flags)
-  local option_channel_htlc_max = 0 < bit32.band(message_flags, tonumber("10000000", 2))
-  local message_flags_to_show = {}
-  if option_channel_htlc_max then
-    table.insert(message_flags_to_show, "option_channel_htlc_max")
-  end
-
-  local channel_flags = string.unpack(">I1", packed_channel_flags)
-  local channel_flags_display = {
-    direction = 0 < bit32.band(channel_flags, tonumber("10000000", 2)),
-    disable = 0 < bit32.band(channel_flags, tonumber("01000000", 2))
-  }
-
   local result = OrderedDict:new(
     "signature", OrderedDict:new(
       "Raw", bin.stohex(packed_signature),
@@ -50,11 +38,11 @@ function deserialize(payload)
     ),
     "message_flags", OrderedDict:new(
       "Raw", bin.stohex(packed_message_flags),
-      "Deserialized", message_flags_to_show
+      "Deserialized", inspect(deserialize_flags(packed_message_flags, {"option_channel_htlc_max"}))
     ),
     "channel_flags", OrderedDict:new(
       "Raw", bin.stohex(packed_channel_flags),
-      "Deserialized", inspect(channel_flags_display)
+      "Deserialized", inspect(deserialize_flags(packed_channel_flags, {"direction", "disable"}))
     ),
     "cltv_expiry_delta", OrderedDict:new(
       "Raw", bin.stohex(packed_cltv_expiry_delta),
