@@ -14,7 +14,8 @@ local deserializers = {
   require("lightning-dissector.deserializers.accept-channel"),
   require("lightning-dissector.deserializers.funding-created"),
   require("lightning-dissector.deserializers.channel-reestablish"),
-  require("lightning-dissector.deserializers.funding-signed")
+  require("lightning-dissector.deserializers.funding-signed"),
+  require("lightning-dissector.deserializers.funding-locked")
 }
 
 local function find_deserializer_for(type)
