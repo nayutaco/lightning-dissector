@@ -17,7 +17,8 @@ dependencies = {
   "compat53 == 0.7",
   "inspect == 3.1.1",
   "basexx == 0.4.0",
-  "poly1305 == 1.0"
+  "poly1305 == 1.0",
+  "middleclass == 4.1.1"
 }
 
 build = {
