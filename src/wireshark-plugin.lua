@@ -4,6 +4,8 @@ package.path = os.getenv("HOME")
   .. "/.luarocks/share/lua/5.2/?/init.lua;"
   .. package.path
 
+package.cpath = os.getenv("HOME") .. "/.luarocks/lib/lua/5.2/?.so;" .. package.cpath
+
 local SecretCache = require("lightning-dissector.secret-cache").SecretCache
 local SecretTable = require("lightning-dissector.secret-cache").SecretTable
 local CompositeSecretFactory = require("lightning-dissector.secret-factory").CompositeSecretFactory
