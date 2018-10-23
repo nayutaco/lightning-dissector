@@ -23,7 +23,8 @@ local deserializers = {
   require("lightning-dissector.deserializers.update-fail-htlc"),
   require("lightning-dissector.deserializers.update-fail-malformed-htlc"),
   require("lightning-dissector.deserializers.commitment-signed"),
-  require("lightning-dissector.deserializers.revoke-and-ack")
+  require("lightning-dissector.deserializers.revoke-and-ack"),
+  require("lightning-dissector.deserializers.update-fee")
 }
 
 local function find_deserializer_for(type)

@@ -51,6 +51,7 @@ build = {
     ["lightning-dissector.deserializers.update-fail-malformed-htlc"] = "src/deserializers/update-fail-malformed-htlc.lua",
     ["lightning-dissector.deserializers.commitment-signed"] = "src/deserializers/commitment-signed.lua",
     ["lightning-dissector.deserializers.revoke-and-ack"] = "src/deserializers/revoke-and-ack.lua",
+    ["lightning-dissector.deserializers.update-fee"] = "src/deserializers/update-fee.lua",
     ["lightning-dissector.utils"] = "src/utils.lua",
     ["plc52.bin"] = "plc/plc/bin.lua",
     ["plc52.chacha20"] = "plc/plc/chacha20.lua"
