@@ -48,6 +48,7 @@ build = {
     ["lightning-dissector.deserializers.update-add-htlc"] = "src/deserializers/update-add-htlc.lua",
     ["lightning-dissector.deserializers.update-fulfill-htlc"] = "src/deserializers/update-fulfill-htlc.lua",
     ["lightning-dissector.deserializers.update-fail-htlc"] = "src/deserializers/update-fail-htlc.lua",
+    ["lightning-dissector.deserializers.update-fail-malformed-htlc"] = "src/deserializers/update-fail-malformed-htlc.lua",
     ["lightning-dissector.utils"] = "src/utils.lua",
     ["plc52.bin"] = "plc/plc/bin.lua",
     ["plc52.chacha20"] = "plc/plc/chacha20.lua"
