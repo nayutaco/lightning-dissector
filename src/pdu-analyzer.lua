@@ -17,7 +17,8 @@ local deserializers = {
   require("lightning-dissector.deserializers.funding-signed"),
   require("lightning-dissector.deserializers.funding-locked"),
   require("lightning-dissector.deserializers.shutdown"),
-  require("lightning-dissector.deserializers.closing-signed")
+  require("lightning-dissector.deserializers.closing-signed"),
+  require("lightning-dissector.deserializers.update-add-htlc")
 }
 
 local function find_deserializer_for(type)
