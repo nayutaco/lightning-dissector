@@ -69,6 +69,13 @@ Currently, lightning-dissector can deserialize
 - funding_locked
 - shutdown
 - closing_signed
+- update_add_htlc
+- update_fulfill_htlc
+- update_fail_htlc
+- update_fail_malformed_htlc
+- commitment_signed
+- revoke_and_ack
+- update_fee
 
 I'm working on another messages.  
 Contributions by [writing deserializers for another messages](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md#add-support-for-another-message) are welcome.
