@@ -4,8 +4,10 @@ A wireshark plugin to analyze communication between Lightning Network nodes
 ![](https://user-images.githubusercontent.com/12756700/45472759-1b79fe00-b770-11e8-812b-f73e8cd18ab6.png)
 
 ## Installation
-First of all, you have to make sure that luarocks for Lua 5.2 is installed.
-[Here is how to build it](https://github.com/luarocks/luarocks/wiki/Installation-instructions-for-Unix).
+First of all, you have to make sure that luarocks for Lua 5.2 is installed.  
+[Here is how to build it](https://github.com/luarocks/luarocks/wiki/Installation-instructions-for-Unix).  
+You should set --lua-version=5.2 option when doing `./configure`.  
+And you'll need Lua library and headers. (if Ubuntu you can get it by `apt install lua5.2 liblua5.2-dev`)
 
 ```bash
 git clone https://github.com/nayutaco/lightning-dissector.git --recursive
