@@ -4,6 +4,7 @@ local Reader = require("lightning-dissector.utils").Reader
 local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 local deserialize_flags = require("lightning-dissector.utils").deserialize_flags
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local fields = require("lightning-dissector.constants").fields
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -27,38 +28,38 @@ function deserialize(payload)
 
   local result = OrderedDict:new(
     "signature", OrderedDict:new(
-      "Raw", bin.stohex(packed_signature),
-      "DER", bin.stohex(convert_signature_der(packed_signature))
+      fields.payload.deserialized.signature.raw, bin.stohex(packed_signature),
+      fields.payload.deserialized.signature.der, bin.stohex(convert_signature_der(packed_signature))
     ),
-    "chain_hash", bin.stohex(packed_chain_hash),
-    "short_channel_id", bin.stohex(packed_short_channel_id),
+    fields.payload.deserialized.chain_hash, bin.stohex(packed_chain_hash),
+    fields.payload.deserialized.short_channel_id, bin.stohex(packed_short_channel_id),
     "timestamp", OrderedDict:new(
-      "Raw", bin.stohex(packed_timestamp),
-      "Deserialized", timestamp
+      fields.payload.deserialized.timestamp.raw, bin.stohex(packed_timestamp),
+      fields.payload.deserialized.timestamp.deserialized, timestamp
     ),
     "message_flags", OrderedDict:new(
-      "Raw", bin.stohex(packed_message_flags),
-      "Deserialized", inspect(deserialize_flags(packed_message_flags, {"option_channel_htlc_max"}))
+      fields.payload.deserialized.message_flags.raw, bin.stohex(packed_message_flags),
+      fields.payload.deserialized.message_flags.deserialized, inspect(deserialize_flags(packed_message_flags, {"option_channel_htlc_max"}))
     ),
     "channel_flags", OrderedDict:new(
-      "Raw", bin.stohex(packed_channel_flags),
-      "Deserialized", inspect(deserialize_flags(packed_channel_flags, {"direction", "disable"}))
+      fields.payload.deserialized.channel_flags.raw, bin.stohex(packed_channel_flags),
+      fields.payload.deserialized.channel_flags.deserialized, inspect(deserialize_flags(packed_channel_flags, {"direction", "disable"}))
     ),
     "cltv_expiry_delta", OrderedDict:new(
-      "Raw", bin.stohex(packed_cltv_expiry_delta),
-      "Deserialized", cltv_expiry_delta
+      fields.payload.deserialized.cltv_expiry_delta.raw, bin.stohex(packed_cltv_expiry_delta),
+      fields.payload.deserialized.cltv_expiry_delta.deserialized, cltv_expiry_delta
     ),
     "htlc_minimum_msat", OrderedDict:new(
-      "Raw", bin.stohex(packed_htlc_minimum_msat),
-      "Deserialized", htlc_minimum_msat
+      fields.payload.deserialized.htlc_minimum_msat.raw, bin.stohex(packed_htlc_minimum_msat),
+      fields.payload.deserialized.htlc_minimum_msat.deserialized, htlc_minimum_msat
     ),
     "fee_base_msat", OrderedDict:new(
-      "Raw", bin.stohex(packed_fee_base_msat),
-      "Deserialized", fee_base_msat
+      fields.payload.deserialized.fee_base_msat.raw, bin.stohex(packed_fee_base_msat),
+      fields.payload.deserialized.fee_base_msat.deserialized, fee_base_msat
     ),
     "fee_proportional_millionths", OrderedDict:new(
-      "Raw", bin.stohex(packed_fee_proportional_millionths),
-      "Deserialized", fee_proportional_millionths
+      fields.payload.deserialized.fee_proportional_millionths.raw, bin.stohex(packed_fee_proportional_millionths),
+      fields.payload.deserialized.fee_proportional_millionths.deserialized, fee_proportional_millionths
     )
   )
 
@@ -67,8 +68,8 @@ function deserialize(payload)
     local htlc_maximum_msat = string.unpack(">I8", packed_htlc_maximum_msat)
 
     result.append("htlc_maximum_msat", OrderedDict:new(
-      "Raw", bin.stohex(packed_htlc_maximum_msat),
-      "Deserialized", htlc_maximum_msat
+      fields.payload.deserialized.htlc_maximum_msat.raw, bin.stohex(packed_htlc_maximum_msat),
+      fields.payload.deserialized.htlc_maximum_msat.deserialized, htlc_maximum_msat
     ))
   end
 
