@@ -21,7 +21,22 @@ local fields = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.type.raw", ftypes.STRING),
         name = ProtoField.new("Name", "lightning.payload.deserialized.type.name", ftypes.STRING),
         number = ProtoField.new("Number", "lightning.payload.deserialized.type.number", ftypes.UINT16)
-
+      },
+      gflen = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.gflen.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.gflen.deserialized", ftypes.UINT16)
+      },
+      global_features = ProtoField.new("global_features", "lightning.payload.deserialized.global_features", ftypes.STRING),
+      lflen = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.lflen.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.lflen.deserialized", ftypes.UINT16)
+      },
+      local_features = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.local_features.raw", ftypes.STRING),
+        deserialized = {
+          optional = ProtoField.new("Optional", "lightning.payload.deserialized.local_features.deserialized.optional", ftypes.STRING),
+          required = ProtoField.new("Required", "lightning.payload.deserialized.local_features.deserialized.required", ftypes.STRING)
+        }
       }
     }
   }
