@@ -44,17 +44,17 @@ local function deserialize(packed_payload)
   if deserializer == nil then
     return OrderedDict:new(
       "Type", OrderedDict:new(
-        "Raw", bin.stohex(packed_type),
-        "Number", type
+        constants.fields.payload.deserialized.type.raw, bin.stohex(packed_type),
+        constants.fields.payload.deserialized.type.number, type
       )
     )
   end
 
   local result = OrderedDict:new(
     "Type", OrderedDict:new(
-      "Raw", bin.stohex(packed_type),
-      "Name", deserializer.name,
-      "Number", type
+      constants.fields.payload.deserialized.type.raw, bin.stohex(packed_type),
+      constants.fields.payload.deserialized.type.name, deserializer.name,
+      constants.fields.payload.deserialized.type.number, type
     )
   )
 
@@ -79,10 +79,10 @@ local function analyze_length(buffer, secret)
     deserialized = deserialized,
     display = function()
       return OrderedDict:new(
-        "Encrypted", bin.stohex(packed_encrypted),
-        "Decrypted", bin.stohex(packed_decrypted),
-        "Deserialized", deserialized,
-        "MAC", bin.stohex(packed_mac)
+        constants.fields.length.encrypted, bin.stohex(packed_encrypted),
+        constants.fields.length.decrypted, bin.stohex(packed_decrypted),
+        constants.fields.length.deserialized, deserialized,
+        constants.fields.length.mac, bin.stohex(packed_mac)
       )
     end
   }
@@ -100,9 +100,9 @@ local function analyze_payload(buffer, secret)
     packed_decrypted = packed_decrypted,
     display = function()
       return OrderedDict:new(
-        "Encrypted", bin.stohex(packed_encrypted),
-        "MAC", bin.stohex(packed_mac),
-        "Decrypted", bin.stohex(packed_decrypted),
+        constants.fields.payload.encrypted, bin.stohex(packed_encrypted),
+        constants.fields.payload.mac, bin.stohex(packed_mac),
+        constants.fields.payload.decrypted, bin.stohex(packed_decrypted),
         "Deserialized", deserialize(packed_decrypted)
       )
     end

@@ -3,6 +3,7 @@ local chacha20 = require "plc52.chacha20"
 local poly1305 = require "poly1305"
 local bin = require "plc52.bin"
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local fields = require("lightning-dissector.constants").fields
 
 local function pad16(s)
   return (#s % 16 == 0) and "" or ('\0'):rep(16 - (#s % 16))
@@ -56,10 +57,10 @@ end
 
 function Secret:display()
   return OrderedDict:new(
-    "Key", bin.stohex(self:packed_key()),
+    fields.secret.key, bin.stohex(self:packed_key()),
     "Nonce", OrderedDict:new(
-      "Raw", bin.stohex(self:packed_nonce()),
-      "Deserialized", self.nonce
+      fields.secret.nonce.raw, bin.stohex(self:packed_nonce()),
+      fields.secret.nonce.deserialized, self.nonce
     )
   )
 end

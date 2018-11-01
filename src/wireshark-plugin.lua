@@ -16,15 +16,11 @@ local constants = require "lightning-dissector.constants"
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
+protocol.fields = constants.fields_array
 protocol.prefs.key_log_paths = Pref.string("Key log file", "~/.cache/ptarmigan/keys.log")
 protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/eclair.log")
 protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
 protocol.prefs.note2 = Pref.statictext("Reload lightning-dissector by Shift+Ctrl+L to make changes take effect.")
-
-local type_name_field = ProtoField.new("Message Type", "lightning.type_name", ftypes.STRING)
-protocol.fields = {
-  type_name_field
-}
 
 local function display(tree, analyzed_pdu)
   for key, value in pairs(analyzed_pdu) do
@@ -32,7 +28,7 @@ local function display(tree, analyzed_pdu)
       local subtree = tree:add(key .. ":")
       display(subtree, value)
     else
-      tree:add(key .. ": " .. value)
+      tree:add(key, value)
     end
   end
 end
@@ -97,8 +93,6 @@ function protocol.dissector(buffer, pinfo, tree)
       analyzed_pdu:append("Length", payload_length.display())
       analyzed_pdu:append("Payload", payload.display())
       offset = offset + whole_length
-
-      tree:add(type_name_field, buffer(0, 1), payload.display().values[4].values[1].values[2])
     end
 
     local subtree = tree:add(protocol, "Lightning Network")
