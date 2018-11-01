@@ -22,7 +22,7 @@ function deserialize(payload)
 
   local timestamp = string.unpack(">I4", packed_timestamp)
   local cltv_expiry_delta = string.unpack(">I2", packed_cltv_expiry_delta)
-  local htlc_minimum_msat = string.unpack(">I8", packed_htlc_minimum_msat)
+  local htlc_minimum_msat = UInt64.decode(packed_htlc_minimum_msat, false)
   local fee_base_msat = string.unpack(">I4", packed_fee_base_msat)
   local fee_proportional_millionths = string.unpack(">I4", packed_fee_proportional_millionths)
 
@@ -65,7 +65,7 @@ function deserialize(payload)
 
   if option_channel_htlc_max then
     local packed_htlc_maximum_msat = reader:read(8)
-    local htlc_maximum_msat = string.unpack(">I8", packed_htlc_maximum_msat)
+    local htlc_maximum_msat = UInt64.decode(packed_htlc_maximum_msat, false)
 
     result.append("htlc_maximum_msat", OrderedDict:new(
       fields.payload.deserialized.htlc_maximum_msat.raw, bin.stohex(packed_htlc_maximum_msat),

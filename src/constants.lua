@@ -62,8 +62,7 @@ local fields = {
       },
       htlc_minimum_msat = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_minimum_msat.raw", ftypes.STRING),
-        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_minimum_msat.deserialized", ftypes.UINT32)
-        -- FIXME: This must be UINT64 but Lua 5.2 can't handle that big number.
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_minimum_msat.deserialized", ftypes.UINT64)
       },
       fee_base_msat = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.fee_base_msat.raw", ftypes.STRING),
@@ -75,8 +74,7 @@ local fields = {
       },
       htlc_maximum_msat = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_maximum_msat.raw", ftypes.STRING),
-        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_maximum_msat.deserialized", ftypes.UINT32)
-        -- FIXME: This must be UINT64 but Lua 5.2 can't handle that big number.
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_maximum_msat.deserialized", ftypes.UINT64)
       }
     }
   }
