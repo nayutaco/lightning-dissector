@@ -37,6 +37,46 @@ local fields = {
           optional = ProtoField.new("Optional", "lightning.payload.deserialized.local_features.deserialized.optional", ftypes.STRING),
           required = ProtoField.new("Required", "lightning.payload.deserialized.local_features.deserialized.required", ftypes.STRING)
         }
+      },
+      signature = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.signature.raw", ftypes.STRING),
+        der = ProtoField.new("DER", "lightning.payload.deserialized.signature.der", ftypes.STRING)
+      },
+      chain_hash = ProtoField.new("chain_hash", "lightning.payload.deserialized.chain_hash", ftypes.STRING),
+      short_channel_id = ProtoField.new("short_channel_id", "lightning.payload.deserialized.short_channel_id", ftypes.STRING),
+      timestamp = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.timestamp.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.timestamp.deserialized", ftypes.UINT32)
+      },
+      message_flags = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.message_flags.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.message_flags.deserialized", ftypes.STRING)
+      },
+      channel_flags = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.channel_flags.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.channel_flags.deserialized", ftypes.STRING)
+      },
+      cltv_expiry_delta = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.cltv_expiry_delta.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.cltv_expiry_delta", ftypes.UINT16)
+      },
+      htlc_minimum_msat = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_minimum_msat.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_minimum_msat.deserialized", ftypes.UINT32)
+        -- FIXME: This must be UINT64 but Lua 5.2 can't handle that big number.
+      },
+      fee_base_msat = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.fee_base_msat.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.fee_base_msat.deserialized", ftypes.UINT32)
+      },
+      fee_proportional_millionths = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.fee_proportional_millionths.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.fee_proportional_millionths.deserialized", ftypes.UINT32)
+      },
+      htlc_maximum_msat = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_maximum_msat.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_maximum_msat.deserialized", ftypes.UINT32)
+        -- FIXME: This must be UINT64 but Lua 5.2 can't handle that big number.
       }
     }
   }
