@@ -104,7 +104,16 @@ local fields = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.byteslen.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.byteslen.deserialized", ftypes.UINT16)
       },
-      ignored = ProtoField.new("ignored", "lightning.payload.deserialized.ignored", ftypes.STRING)
+      ignored = ProtoField.new("ignored", "lightning.payload.deserialized.ignored", ftypes.STRING),
+      channel_id = ProtoField.new("channel_id", "lightning.payload.deserialized.channel_id", ftypes.STRING),
+      len = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.len.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.len.deserialized", ftypes.UINT16)
+      },
+      data = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.data.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.data.deserialized", ftypes.STRING)
+      }
     }
   }
 }
