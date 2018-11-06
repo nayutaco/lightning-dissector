@@ -3,6 +3,7 @@ local basexx = require "basexx"
 local Reader = require("lightning-dissector.utils").Reader
 local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -21,7 +22,7 @@ function deserialize(payload)
 
   local timestamp = string.unpack(">I4", packed_timestamp)
 
-  local addresses = OrderedDict:new()
+  local addresses = {}
   local addresses_reader = Reader:new(packed_addresses)
   while addresses_reader:has_next() do
     local packed_address_type = addresses_reader:read(1)
@@ -41,9 +42,9 @@ function deserialize(payload)
       local port = string.unpack(">I2", packed_port)
 
       table.insert(addresses, OrderedDict:new(
-        "type", "IPv4",
-        "addr", ipv4_addr,
-        "port", port
+        f.addresses.deserialized.type, "IPv4",
+        f.addresses.deserialized.addr, ipv4_addr,
+        f.addresses.deserialized.port, port
       ))
 
     elseif address_type == 2 then
@@ -60,9 +61,9 @@ function deserialize(payload)
       local port = string.unpack(">I2", packed_port)
 
       table.insert(addresses, OrderedDict:new(
-        "type", "IPv6",
-        "addr", ipv6_addr,
-        "port", port
+        f.addresses.deserialized.type, "IPv6",
+        f.addresses.deserialized.addr, ipv6_addr,
+        f.addresses.deserialized.port, port
       ))
     elseif address_type == 3 then
       local packed_v2_onion_addr = addresses_reader:read(10)
@@ -70,9 +71,9 @@ function deserialize(payload)
       local packed_port = addresses_reader:read(2)
 
       table.insert(addresses, OrderedDict:new(
-        "type", "Tor v2 onion service",
-        "addr", v2_onion_addr .. ".onion",
-        "port", string.unpack(">I2", packed_port)
+        f.addresses.deserialized.type, "Tor v2 onion service",
+        f.addresses.deserialized.addr, v2_onion_addr .. ".onion",
+        f.addresses.deserialized.port, string.unpack(">I2", packed_port)
       ))
     elseif address_type == 4 then
       local packed_v3_onion_addr = addresses_reader:read(32)
@@ -81,36 +82,36 @@ function deserialize(payload)
       local packed_port = addresses_reader:read(2)
 
       table.insert(addresses, OrderedDict:new(
-        "type", "Tor v2 onion service",
-        "addr", v3_onion_addr .. ".onion",
-        "port", string.unpack(">I2", packed_port)
+        f.addresses.deserialized.type, "Tor v2 onion service",
+        f.addresses.deserialized.addr, v3_onion_addr .. ".onion",
+        f.addresses.deserialized.port, string.unpack(">I2", packed_port)
       ))
     end
   end
 
   return OrderedDict:new(
     "signature", OrderedDict:new(
-      "Raw", bin.stohex(packed_signature),
-      "DER", bin.stohex(convert_signature_der(packed_signature))
+      f.signature.raw, bin.stohex(packed_signature),
+      f.signature.der, bin.stohex(convert_signature_der(packed_signature))
     ),
     "flen", OrderedDict:new(
-      "Raw", bin.stohex(packed_flen),
-      "Deserialized", flen
+      f.flen.raw, bin.stohex(packed_flen),
+      f.flen.deserialized, flen
     ),
-    "features", bin.stohex(packed_features),
+    f.features, bin.stohex(packed_features),
     "timestamp", OrderedDict:new(
-      "Raw", bin.stohex(packed_timestamp),
-      "Deserialized", timestamp
+      f.timestamp.raw, bin.stohex(packed_timestamp),
+      f.timestamp.deserialized, timestamp
     ),
-    "node_id", bin.stohex(packed_node_id),
-    "rgb_color", "#" .. bin.stohex(packed_rgb_color),
-    "alias", alias,
+    f.node_id, bin.stohex(packed_node_id),
+    f.rgb_color, "#" .. bin.stohex(packed_rgb_color),
+    f.alias, alias,
     "addrlen", OrderedDict:new(
-      "Raw", bin.stohex(packed_addrlen),
-      "Deserialized", addrlen
+      f.addrlen.raw, bin.stohex(packed_addrlen),
+      f.addrlen.deserialized, addrlen
     ),
     "addresses", OrderedDict:new(
-      "Raw", bin.stohex(packed_addresses),
+      f.addresses.raw, bin.stohex(packed_addresses),
       "Deserialized", addresses
     )
   )
