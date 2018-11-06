@@ -75,6 +75,26 @@ local fields = {
       htlc_maximum_msat = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_maximum_msat.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_maximum_msat.deserialized", ftypes.UINT64)
+      },
+      flen = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.flen.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.flen.deserialized", ftypes.UINT16)
+      },
+      features = ProtoField.new("features", "lightning.payload.deserialized.features", ftypes.STRING),
+      node_id = ProtoField.new("node_id", "lightning.payload.deserialized.node_id", ftypes.STRING),
+      rgb_color = ProtoField.new("rgb_color", "lightning.payload.deserialized.rgb_color", ftypes.STRING),
+      alias = ProtoField.new("alias", "lightning.payload.deserialized.alias", ftypes.STRING),
+      addrlen = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.addrlen.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.addrlen.deserialized", ftypes.UINT16)
+      },
+      addresses = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.addresses.raw", ftypes.STRING),
+        deserialized = {
+          type = ProtoField.new("type", "lightning.payload.deserialized.addresses.deserialized.type", ftypes.STRING),
+          addr = ProtoField.new("addr", "lightning.payload.deserialized.addresses.deserialized.addr", ftypes.STRING),
+          port = ProtoField.new("port", "lightning.payload.deserialized.addresses.deserialized.port", ftypes.UINT16)
+        }
       }
     }
   }
