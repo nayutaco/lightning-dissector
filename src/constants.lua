@@ -95,7 +95,16 @@ local fields = {
           addr = ProtoField.new("addr", "lightning.payload.deserialized.addresses.deserialized.addr", ftypes.STRING),
           port = ProtoField.new("port", "lightning.payload.deserialized.addresses.deserialized.port", ftypes.UINT16)
         }
-      }
+      },
+      num_pong_bytes = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.num_pong_bytes.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.num_pong_bytes.deserialized", ftypes.UINT16)
+      },
+      byteslen = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.byteslen.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.byteslen.deserialized", ftypes.UINT16)
+      },
+      ignored = ProtoField.new("ignored", "lightning.payload.deserialized.ignored", ftypes.STRING)
     }
   }
 }

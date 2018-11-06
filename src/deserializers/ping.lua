@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -13,14 +14,14 @@ function deserialize(payload)
 
   return OrderedDict:new(
     "num_pong_bytes", OrderedDict:new(
-      "Raw", bin.stohex(packed_num_pong_bytes),
-      "Deserialized", num_pong_bytes
+      f.num_pong_bytes.raw, bin.stohex(packed_num_pong_bytes),
+      f.num_pong_bytes.deserialized, num_pong_bytes
     ),
     "byteslen", OrderedDict:new(
-      "Raw", bin.stohex(packed_byteslen),
-      "Deserialized", byteslen
+      f.byteslen.raw, bin.stohex(packed_byteslen),
+      f.byteslen.deserialized, byteslen
     ),
-    "ignored", bin.stohex(packed_ignored)
+    f.ignored, bin.stohex(packed_ignored)
   )
 end
 
