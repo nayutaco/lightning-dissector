@@ -113,7 +113,27 @@ local fields = {
       data = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.data.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.data.deserialized", ftypes.STRING)
-      }
+      },
+      node_signature_1 = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.node_signature_1.raw", ftypes.STRING),
+        der = ProtoField.new("DER", "lightning.payload.deserialized.node_signature_1.der", ftypes.STRING)
+      },
+      node_signature_2 = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.node_signature_2.raw", ftypes.STRING),
+        der = ProtoField.new("DER", "lightning.payload.deserialized.node_signature_2.der", ftypes.STRING)
+      },
+      bitcoin_signature_1 = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.bitcoin_signature_1.raw", ftypes.STRING),
+        der = ProtoField.new("DER", "lightning.payload.deserialized.bitcoin_signature_1.der", ftypes.STRING)
+      },
+      bitcoin_signature_2 = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.bitcoin_signature_2.raw", ftypes.STRING),
+        der = ProtoField.new("Raw", "lightning.payload.deserialized.bitcoin_signature_2.der", ftypes.STRING)
+      },
+      node_id_1 = ProtoField.new("node_id_1", "lightning.payload.deserialized.node_id_1", ftypes.STRING),
+      node_id_2 = ProtoField.new("node_id_2", "lightning.payload.deserialized.node_id_2", ftypes.STRING),
+      bitcoin_key_1 = ProtoField.new("bitcoin_key_1", "lightning.payload.deserialized.bitcoin_key_1", ftypes.STRING),
+      bitcoin_key_2 = ProtoField.new("bitcoin_key_2", "lightning.payload.deserialized.bitcoin_key_2", ftypes.STRING)
     }
   }
 }
