@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -11,15 +12,15 @@ function deserialize(payload)
   local packed_signature = reader:read(64)
 
   return OrderedDict:new(
-    "temporary_channel_id", bin.stohex(packed_temporary_channel_id),
-    "funding_txid", bin.stohex(packed_funding_txid),
+    f.temporary_channel_id, bin.stohex(packed_temporary_channel_id),
+    f.funding_txid, bin.stohex(packed_funding_txid),
     "funding_output_index", OrderedDict:new(
-      "Raw", bin.stohex(packed_funding_output_index),
-      "Deserialized", (string.unpack(">I2", packed_funding_output_index))
+      f.funding_output_index.raw, bin.stohex(packed_funding_output_index),
+      f.funding_output_index.deserialized, (string.unpack(">I2", packed_funding_output_index))
     ),
     "signature", OrderedDict:new(
-      "Raw", bin.stohex(packed_signature),
-      "DER", bin.stohex(convert_signature_der(packed_signature))
+      f.signature.raw, bin.stohex(packed_signature),
+      f.signature.der, bin.stohex(convert_signature_der(packed_signature))
     )
   )
 end

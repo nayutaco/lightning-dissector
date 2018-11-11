@@ -185,6 +185,11 @@ local fields = {
       minimum_depth = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.minimum_depth.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.minimum_depth.deserialized", ftypes.UINT32)
+      },
+      funding_txid = ProtoField.new("funding_txid", "lightning.payload.deserialized.funding_txid", ftypes.STRING),
+      funding_output_index = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.funding_output_index.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.funding_output_index.deserialized", ftypes.UINT16)
       }
     }
   }
