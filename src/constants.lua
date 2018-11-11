@@ -190,7 +190,8 @@ local fields = {
       funding_output_index = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.funding_output_index.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.funding_output_index.deserialized", ftypes.UINT16)
-      }
+      },
+      next_per_commitment_point = ProtoField.new("next_per_commitment_point", "lightning.payload.deserialized.next_per_commitment_point", ftypes.STRING)
     }
   }
 }

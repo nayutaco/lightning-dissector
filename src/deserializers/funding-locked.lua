@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -9,8 +10,8 @@ function deserialize(payload)
   local packed_next_per_commitment_point = reader:read(33)
 
   return OrderedDict:new(
-    "channel_id", bin.stohex(packed_channel_id),
-    "next_per_commitment_point", bin.stohex(packed_next_per_commitment_point)
+    f.channel_id, bin.stohex(packed_channel_id),
+    f.next_per_commitment_point, bin.stohex(packed_next_per_commitment_point)
   )
 end
 
