@@ -133,7 +133,55 @@ local fields = {
       node_id_1 = ProtoField.new("node_id_1", "lightning.payload.deserialized.node_id_1", ftypes.STRING),
       node_id_2 = ProtoField.new("node_id_2", "lightning.payload.deserialized.node_id_2", ftypes.STRING),
       bitcoin_key_1 = ProtoField.new("bitcoin_key_1", "lightning.payload.deserialized.bitcoin_key_1", ftypes.STRING),
-      bitcoin_key_2 = ProtoField.new("bitcoin_key_2", "lightning.payload.deserialized.bitcoin_key_2", ftypes.STRING)
+      bitcoin_key_2 = ProtoField.new("bitcoin_key_2", "lightning.payload.deserialized.bitcoin_key_2", ftypes.STRING),
+      temporary_channel_id = ProtoField.new("temporary_channel_id", "lightning.payload.deserialized.temporary_channel_id", ftypes.STRING),
+      funding_satoshis = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.funding_satoshis.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.funding_satoshis.deserialized", ftypes.UINT64)
+      },
+      push_msat = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.push_msat.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.push_msat.deserialized", ftypes.UINT64)
+      },
+      dust_limit_satoshis = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.dust_limit_satoshis.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.dust_limit_satoshis.deserialized", ftypes.UINT64)
+      },
+      max_htlc_value_in_flight_msat = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.max_htlc_value_in_flight_msat.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.max_htlc_value_in_flight_msat.deserialized", ftypes.UINT64)
+      },
+      channel_reserve_satoshis = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.channel_reserve_satoshis.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.channel_reserve_satoshis.deserialized", ftypes.UINT64)
+      },
+      htlc_minimum_msat = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_minimum_msat.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.htlc_minimum_msat.deserialized", ftypes.UINT64)
+      },
+      feerate_per_kw = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.feerate_per_kw.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.feerate_per_kw.deserialized", ftypes.UINT32)
+      },
+      to_self_delay = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.to_self_delay.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.to_self_delay.deserialized", ftypes.UINT16)
+      },
+      max_accepted_htlcs = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.max_accepted_htlcs.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.max_accepted_htlcs.deserialized", ftypes.UINT16)
+      },
+      funding_pubkey = ProtoField.new("funding_pubkey", "lightning.payload.deserialized.funding_pubkey", ftypes.STRING),
+      revocation_basepoint = ProtoField.new("revocation_basepoint", "lightning.payload.deserialized.revocation_basepont", ftypes.STRING),
+      payment_basepoint = ProtoField.new("payment_basepoint", "lightning.payload.deserialized.payment_basepoint", ftypes.STRING),
+      delayed_payment_basepoint = ProtoField.new("delayed_payment_basepoint", "lightning.payload.deserialized.delayed_payment_basepoint", ftypes.STRING),
+      htlc_basepoint = ProtoField.new("htlc_basepoint", "lightning.payload.deserialized.htlc_basepoint", ftypes.STRING),
+      first_per_commitment_point = ProtoField.new("first_per_commitment_point", "lightning.payload.deserialized.first_per_commitment_point", ftypes.STRING),
+      shutdown_len = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.shutdown_len.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.shutdown_len.deserialized", ftypes.UINT16)
+      },
+      shutdown_scriptpubkey = ProtoField.new("shutdown_scriptpubkey", "lightning.payload.deserialized.shutdown_scriptpubkey", ftypes.STRING)
     }
   }
 }
