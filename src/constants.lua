@@ -181,7 +181,11 @@ local fields = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.shutdown_len.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.shutdown_len.deserialized", ftypes.UINT16)
       },
-      shutdown_scriptpubkey = ProtoField.new("shutdown_scriptpubkey", "lightning.payload.deserialized.shutdown_scriptpubkey", ftypes.STRING)
+      shutdown_scriptpubkey = ProtoField.new("shutdown_scriptpubkey", "lightning.payload.deserialized.shutdown_scriptpubkey", ftypes.STRING),
+      minimum_depth = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.minimum_depth.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.minimum_depth.deserialized", ftypes.UINT32)
+      }
     }
   }
 }
