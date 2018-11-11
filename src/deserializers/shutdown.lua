@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -13,9 +14,12 @@ function deserialize(payload)
   local packed_scriptpubkey = reader:read(len)
 
   return OrderedDict:new(
-    "channel_id", bin.stohex(packed_channel_id),
-    "len", len,
-    "scriptpubkey", bin.stohex(packed_scriptpubkey)
+    f.channel_id, bin.stohex(packed_channel_id),
+    "len", OrderedDict:new(
+      f.len.raw, bin.stohex(packed_len),
+      f.len.deserialized, len
+    ),
+    f.scriptpubkey, bin.stohex(packed_scriptpubkey)
   )
 end
 
