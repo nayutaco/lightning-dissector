@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -9,10 +10,10 @@ function deserialize(payload)
   local packed_feerate_per_kw = reader:read(4)
 
   return OrderedDict:new(
-    "channel_id", bin.stohex(packed_channel_id),
+    f.channel_id, bin.stohex(packed_channel_id),
     "feerate_per_kw", OrderedDict:new(
-      "Raw", bin.stohex(packed_feerate_per_kw),
-      "Deserialized", (string.unpack(">I4", packed_feerate_per_kw))
+      f.feerate_per_kw.raw, bin.stohex(packed_feerate_per_kw),
+      f.feerate_per_kw.deserialized, (string.unpack(">I4", packed_feerate_per_kw))
     )
   )
 end
