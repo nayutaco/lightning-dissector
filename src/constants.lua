@@ -214,7 +214,15 @@ local fields = {
       reason = ProtoField.new("reason", "lightning.payload.deserialized.reason", ftypes.STRING),
       payment_preimage = ProtoField.new("payment_preimage", "lightning.payload.deserialized.payment_preimage", ftypes.STRING),
       sha256_of_onion = ProtoField.new("sha256_of_onion", "lightning.payload.deserialized.sha256_of_onion", ftypes.STRING),
-      failure_code = ProtoField.new("failure_code", "lightning.payload.deserialized.failure_code", ftypes.STRING)
+      failure_code = ProtoField.new("failure_code", "lightning.payload.deserialized.failure_code", ftypes.STRING),
+      num_htlcs = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.num_htlcs.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.num_htlcs.deserialized", ftypes.STRING)
+      },
+      htlc_signature = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_signature.raw", ftypes.STRING),
+        der = ProtoField.new("DER", "lightning.payload.deserialized.htlc_signature.der", ftypes.STRING)
+      }
     }
   }
 }
