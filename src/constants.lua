@@ -211,7 +211,8 @@ local fields = {
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.cltv_expiry.deserialized", ftypes.UINT32)
       },
       onion_routing_packet = ProtoField.new("onion_routing_packet", "lightning.payload.deserialized.onion_routing_packet", ftypes.STRING),
-      reason = ProtoField.new("reason", "lightning.payload.deserialized.reason", ftypes.STRING)
+      reason = ProtoField.new("reason", "lightning.payload.deserialized.reason", ftypes.STRING),
+      payment_preimage = ProtoField.new("payment_preimage", "lightning.payload.deserialized.payment_preimage", ftypes.STRING)
     }
   }
 }

@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -10,12 +11,12 @@ function deserialize(payload)
   local packed_payment_preimage = reader:read(32)
 
   return OrderedDict:new(
-    "channel_id", bin.stohex(packed_channel_id),
+    f.channel_id, bin.stohex(packed_channel_id),
     "id", OrderedDict:new(
-      "Raw", bin.stohex(packed_id),
-      "Deserialized", (string.unpack(">I8", packed_id))
+      f.id.raw, bin.stohex(packed_id),
+      f.id.deserialized, UInt64.decode(packed_id, false)
     ),
-    "payment_preimage", bin.stohex(packed_payment_preimage)
+    f.payment_preimage, bin.stohex(packed_payment_preimage)
   )
 end
 
