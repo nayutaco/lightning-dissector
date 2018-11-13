@@ -196,7 +196,21 @@ local fields = {
       fee_satoshis = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.fee_satoshis.raw", ftypes.STRING),
         deserialized = ProtoField.new("Raw", "lightning.payload.deserialized.fee_satoshis.deserialized", ftypes.UINT64)
-      }
+      },
+      id = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.id.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.id.deserialized", ftypes.UINT64)
+      },
+      amount_msat = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.amount_msat.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.amount_msat.deserialized", ftypes.UINT64)
+      },
+      payment_hash = ProtoField.new("payment_hash", "lightning.payload.deserialized.payment_hash", ftypes.STRING),
+      cltv_expiry = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.cltv_expiry.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.cltv_expiry.deserialized", ftypes.UINT32)
+      },
+      onion_routing_packet = ProtoField.new("onion_routing_packet", "lightning.payload.deserialized.onion_routing_packet", ftypes.STRING)
     }
   }
 }

@@ -1,6 +1,7 @@
 local bin = require "plc52.bin"
 local Reader = require("lightning-dissector.utils").Reader
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -13,21 +14,21 @@ function deserialize(payload)
   local packed_onion_routing_packet = reader:read(1366)
 
   return OrderedDict:new(
-    "channel_id", bin.stohex(packed_channel_id),
+    f.channel_id, bin.stohex(packed_channel_id),
     "id", OrderedDict:new(
-      "Raw", bin.stohex(packed_id),
-      "Deserialized", (string.unpack(">I8", packed_id))
+      f.id.raw, bin.stohex(packed_id),
+      f.id.deserialized, UInt64.decode(packed_id, false)
     ),
     "amount_msat", OrderedDict:new(
-      "Raw", bin.stohex(packed_amount_msat),
-      "Deserialized", (string.unpack(">I8", packed_id))
+      f.amount_msat.raw, bin.stohex(packed_amount_msat),
+      f.amount_msat.deserialized, UInt64.decode(packed_amount_msat, false)
     ),
-    "payment_hash", bin.stohex(packed_payment_hash),
+    f.payment_hash, bin.stohex(packed_payment_hash),
     "cltv_expiry", OrderedDict:new(
-      "Raw", bin.stohex(packed_cltv_expiry),
-      "Deserialized", (string.unpack(">I4", packed_cltv_expiry))
+      f.cltv_expiry.raw, bin.stohex(packed_cltv_expiry),
+      f.cltv_expiry.deserialized, (string.unpack(">I4", packed_cltv_expiry))
     ),
-    "onion_routing_packet", bin.stohex(packed_onion_routing_packet)
+    f.onion_routing_packet, bin.stohex(packed_onion_routing_packet)
   )
 end
 
