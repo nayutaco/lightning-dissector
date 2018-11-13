@@ -212,7 +212,9 @@ local fields = {
       },
       onion_routing_packet = ProtoField.new("onion_routing_packet", "lightning.payload.deserialized.onion_routing_packet", ftypes.STRING),
       reason = ProtoField.new("reason", "lightning.payload.deserialized.reason", ftypes.STRING),
-      payment_preimage = ProtoField.new("payment_preimage", "lightning.payload.deserialized.payment_preimage", ftypes.STRING)
+      payment_preimage = ProtoField.new("payment_preimage", "lightning.payload.deserialized.payment_preimage", ftypes.STRING),
+      sha256_of_onion = ProtoField.new("sha256_of_onion", "lightning.payload.deserialized.sha256_of_onion", ftypes.STRING),
+      failure_code = ProtoField.new("failure_code", "lightning.payload.deserialized.failure_code", ftypes.STRING)
     }
   }
 }
