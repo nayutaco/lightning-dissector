@@ -210,7 +210,8 @@ local fields = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.cltv_expiry.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.cltv_expiry.deserialized", ftypes.UINT32)
       },
-      onion_routing_packet = ProtoField.new("onion_routing_packet", "lightning.payload.deserialized.onion_routing_packet", ftypes.STRING)
+      onion_routing_packet = ProtoField.new("onion_routing_packet", "lightning.payload.deserialized.onion_routing_packet", ftypes.STRING),
+      reason = ProtoField.new("reason", "lightning.payload.deserialized.reason", ftypes.STRING)
     }
   }
 }
