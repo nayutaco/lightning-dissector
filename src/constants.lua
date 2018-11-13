@@ -222,7 +222,9 @@ local fields = {
       htlc_signature = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.htlc_signature.raw", ftypes.STRING),
         der = ProtoField.new("DER", "lightning.payload.deserialized.htlc_signature.der", ftypes.STRING)
-      }
+      },
+      per_commitment_secret = ProtoField.new("per_commitment_secret", "lightning.payload.deserialized.per_commitment_secret", ftypes.STRING),
+      next_per_commitment_point = ProtoField.new("next_per_commitment_point", "lightning.payload.deserialized.next_per_commitment_point", ftypes.STRING)
     }
   }
 }
