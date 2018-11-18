@@ -15,7 +15,7 @@ function deserialize(payload)
   local packed_timestamp = reader:read(4)
   local packed_node_id = reader:read(33)
   local packed_rgb_color = reader:read(3)
-  local alias = reader:read(32)
+  local packed_alias = reader:read(32)
   local packed_addrlen = reader:read(2)
   local addrlen = string.unpack(">I2", packed_addrlen)
   local packed_addresses = reader:read(addrlen)
@@ -105,7 +105,10 @@ function deserialize(payload)
     ),
     f.node_id, bin.stohex(packed_node_id),
     f.rgb_color, "#" .. bin.stohex(packed_rgb_color),
-    f.alias, alias,
+    "alias", OrderedDict:new(
+      f.alias.raw, bin.stohex(packed_alias),
+      f.alias.deserialized, packed_alias
+    ),
     "addrlen", OrderedDict:new(
       f.addrlen.raw, bin.stohex(packed_addrlen),
       f.addrlen.deserialized, addrlen

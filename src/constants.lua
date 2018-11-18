@@ -83,7 +83,10 @@ local fields = {
       features = ProtoField.new("features", "lightning.payload.deserialized.features", ftypes.STRING),
       node_id = ProtoField.new("node_id", "lightning.payload.deserialized.node_id", ftypes.STRING),
       rgb_color = ProtoField.new("rgb_color", "lightning.payload.deserialized.rgb_color", ftypes.STRING),
-      alias = ProtoField.new("alias", "lightning.payload.deserialized.alias", ftypes.STRING),
+      alias = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.alias.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.alias.deserialized", ftypes.STRING)
+      },
       addrlen = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.addrlen.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.addrlen.deserialized", ftypes.UINT16)
