@@ -22,7 +22,7 @@ function deserialize(payload)
   local packed_bitcoin_key_2 = reader:read(33)
 
   return OrderedDict:new(
-    "node_signature", OrderedDict:new(
+    "node_signature_1", OrderedDict:new(
       f.node_signature_1.raw, bin.stohex(packed_node_signature_1),
       f.node_signature_1.der, bin.stohex(convert_signature_der(packed_node_signature_1))
     ),
