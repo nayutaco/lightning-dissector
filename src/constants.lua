@@ -43,7 +43,10 @@ local fields = {
         der = ProtoField.new("DER", "lightning.payload.deserialized.signature.der", ftypes.STRING)
       },
       chain_hash = ProtoField.new("chain_hash", "lightning.payload.deserialized.chain_hash", ftypes.STRING),
-      short_channel_id = ProtoField.new("short_channel_id", "lightning.payload.deserialized.short_channel_id", ftypes.STRING),
+      short_channel_id = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.short_channel_id.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.short_channel_id.deserialized", ftypes.STRING)
+      },
       timestamp = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.timestamp.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.timestamp.deserialized", ftypes.UINT32)

@@ -92,10 +92,23 @@ function deserialize_flags(bytes, defined_flags)
   return enabled_flags
 end
 
+function deserialize_short_channel_id(packed_short_channel_id)
+  local packed_blocknum = packed_short_channel_id:sub(1, 3)
+  local packed_txnum = packed_short_channel_id:sub(4, 6)
+  local packed_outnum = packed_short_channel_id:sub(7, 8)
+
+  local blocknum = string.unpack(">I3", packed_blocknum)
+  local txnum = string.unpack(">I3", packed_txnum)
+  local outnum = string.unpack(">I2", packed_outnum)
+
+  return blocknum .. 'x' .. txnum .. 'x' .. outnum
+end
+
 return {
   Reader = Reader,
   OrderedDict = OrderedDict,
   encode_signature_der = encode_signature_der,
   convert_signature_der = convert_signature_der,
-  deserialize_flags = deserialize_flags
+  deserialize_flags = deserialize_flags,
+  deserialize_short_channel_id = deserialize_short_channel_id
 }

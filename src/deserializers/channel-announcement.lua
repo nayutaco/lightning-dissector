@@ -3,6 +3,7 @@ local Reader = require("lightning-dissector.utils").Reader
 local convert_signature_der = require("lightning-dissector.utils").convert_signature_der
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
 local f = require("lightning-dissector.constants").fields.payload.deserialized
+local deserialize_short_channel_id = require("lightning-dissector.utils").deserialize_short_channel_id
 
 function deserialize(payload)
   local reader = Reader:new(payload)
@@ -44,7 +45,10 @@ function deserialize(payload)
     ),
     f.features, bin.stohex(packed_features),
     f.chain_hash, bin.stohex(packed_chain_hash),
-    f.short_channel_id, bin.stohex(packed_short_channel_id),
+    "short_channel_id", OrderedDict:new(
+      f.short_channel_id.raw, bin.stohex(packed_short_channel_id),
+      f.short_channel_id.deserialized, deserialize_short_channel_id(packed_short_channel_id)
+    ),
     f.node_id_1, bin.stohex(packed_node_id_1),
     f.node_id_2, bin.stohex(packed_node_id_2),
     f.bitcoin_key_1, bin.stohex(packed_bitcoin_key_1),
