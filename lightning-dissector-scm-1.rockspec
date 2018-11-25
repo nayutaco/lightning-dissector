@@ -18,7 +18,8 @@ dependencies = {
   "inspect == 3.1.1",
   "basexx == 0.4.0",
   "poly1305 == 1.0",
-  "middleclass == 4.1.1"
+  "middleclass == 4.1.1",
+  "lua-zlib == 1.2"
 }
 
 build = {
@@ -53,6 +54,7 @@ build = {
     ["lightning-dissector.deserializers.revoke-and-ack"] = "src/deserializers/revoke-and-ack.lua",
     ["lightning-dissector.deserializers.update-fee"] = "src/deserializers/update-fee.lua",
     ["lightning-dissector.deserializers.announcement-signatures"] = "src/deserializers/announcement-signatures.lua",
+    ["lightning-dissector.deserializers.query-short-channel-ids"] = "src/deserializers/query-short-channel-ids.lua",
     ["lightning-dissector.utils"] = "src/utils.lua",
     ["plc52.bin"] = "plc/plc/bin.lua",
     ["plc52.chacha20"] = "plc/plc/chacha20.lua"

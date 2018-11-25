@@ -239,6 +239,13 @@ local fields = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.bitcoin_signature.raw", ftypes.STRING),
         der = ProtoField.new("DER", "lightning.payload.deserialized.bitcoin_signature.der", ftypes.STRING)
       },
+      encoded_short_ids = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.encoded_short_ids.raw", ftypes.STRING),
+        deserialized = {
+          raw = ProtoField.new("Raw", "lightning.payload.deserialized.encoded_short_ids.deserialized.raw", ftypes.STRING),
+          deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.encoded_short_ids.deserialized.deserialized", ftypes.STRING)
+        }
+      }
     }
   }
 }
