@@ -11,6 +11,7 @@ local SecretTable = require("lightning-dissector.secret-cache").SecretTable
 local CompositeSecretFactory = require("lightning-dissector.secret-factory").CompositeSecretFactory
 local KeyLogSecretFactory = require("lightning-dissector.secret-factory").KeyLogSecretFactory
 local EclairSecretFactory = require("lightning-dissector.secret-factory").EclairSecretFactory
+local ClightningSecretFactory = require("lightning-dissector.secret-factory").ClightningSecretFactory
 local pdu_analyzer = require "lightning-dissector.pdu-analyzer"
 local constants = require "lightning-dissector.constants"
 local OrderedDict = require("lightning-dissector.utils").OrderedDict
@@ -19,6 +20,7 @@ local protocol = Proto("LIGHTNING", "Lightning Network")
 protocol.fields = constants.fields_array
 protocol.prefs.key_log_paths = Pref.string("Key log file", "~/.cache/ptarmigan/keys.log")
 protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/eclair.log")
+protocol.prefs.clightning_key_paths = Pref.string("C-Lightning log file", "~/.lightning/keys.log")
 protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
 
 local function display(tree, analyzed_pdu)
@@ -43,6 +45,10 @@ function protocol.init()
 
   for eclair_key_path in protocol.prefs.eclair_key_paths:gmatch("[^:]+") do
     table.insert(secret_factories, EclairSecretFactory:new(eclair_key_path))
+  end
+
+  for clightning_key_path in protocol.prefs.clightning_key_paths:gmatch("[^:]+") do
+    table.insert(secret_factories, ClightningSecretFactory:new(clightning_key_path))
   end
 
   secret_cache = SecretCache:new(SecretTable:new(CompositeSecretFactory:new(secret_factories)))
