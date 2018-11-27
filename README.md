@@ -20,6 +20,15 @@ ln -s ~/.luarocks/share/lua/5.2/lightning-dissector/wireshark-plugin.lua ~/.conf
 ```
 
 ## Setup
+### c-lightning
+```bash
+git clone https://github.com/arowser/lightning -b dissector
+cd lightning
+./configure  --enable-dissector
+make -j
+make install  # optional
+```
+
 ### Eclair
 Set loglevel to DEBUG.  
 lightning-dissector searches debug log for decryption key.
