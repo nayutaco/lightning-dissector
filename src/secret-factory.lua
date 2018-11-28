@@ -91,33 +91,6 @@ function CompositeSecretFactory:create(buffer)
   end
 end
 
-local ClightningSecretFactory = class("ClightningSecretFactory", SecretFactory)
-
-function ClightningSecretFactory:initialize(log_path)
-  self.log_path = rex.gsub(log_path, "^~", os.getenv("HOME"))
-end
-
-function ClightningSecretFactory:create(buffer)
-  local packed_length_mac = buffer:raw(constants.lengths.length, constants.lengths.length_mac)
-  local length_mac = bin.stohex(packed_length_mac)
-
-  -- First, assume nonce of the message is 0, and search key for the message
-  local log_file = io.open(self.log_path)
-  if log_file == nil then
-    info('A preference "Key log file" refers to non-existent file')
-    return
-  end
-
-  local log = log_file:read("*all")
-  log_file:close()
-
-  local key = rex.match(log, "([0-9a-f]+)")
-  if key ~= nil then
-    local packed_key = bin.hextos(key)
-    return Secret:new(packed_key)
-  end  
-end  
-
 return {
   CompositeSecretFactory = CompositeSecretFactory,
   KeyLogSecretFactory = KeyLogSecretFactory,
