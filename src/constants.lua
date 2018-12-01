@@ -245,6 +245,10 @@ local fields = {
           raw = ProtoField.new("Raw", "lightning.payload.deserialized.encoded_short_ids.deserialized.raw", ftypes.STRING),
           deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.encoded_short_ids.deserialized.deserialized", ftypes.STRING)
         }
+      },
+      complete = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.complete.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.complete.deserialized", ftypes.UINT8)
       }
     }
   }
