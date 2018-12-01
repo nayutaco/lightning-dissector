@@ -28,7 +28,8 @@ local deserializers = {
   require("lightning-dissector.deserializers.announcement-signatures"),
   require("lightning-dissector.deserializers.query-short-channel-ids"),
   require("lightning-dissector.deserializers.reply-short-channel-ids-end"),
-  require("lightning-dissector.deserializers.query-channel-range")
+  require("lightning-dissector.deserializers.query-channel-range"),
+  require("lightning-dissector.deserializers.reply-channel-range")
 }
 
 local function find_deserializer_for(type)

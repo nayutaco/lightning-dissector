@@ -1,5 +1,7 @@
 local class = require "middleclass"
 local bin = require "plc52.bin"
+local zlib = require "zlib"
+local f = require("lightning-dissector.constants").fields.payload.deserialized
 
 -- provides file-like read
 local Reader = class("Reader")
@@ -104,11 +106,41 @@ function deserialize_short_channel_id(packed_short_channel_id)
   return blocknum .. 'x' .. txnum .. 'x' .. outnum
 end
 
+function decode_short_ids(packed_short_ids)
+  local reader = Reader:new(packed_short_ids)
+
+  local result = {}
+  while reader:has_next() do
+    local packed_short_id = reader:read(8)
+    table.insert(result, OrderedDict:new(
+      f.encoded_short_ids.deserialized.raw, bin.stohex(packed_short_id),
+      f.encoded_short_ids.deserialized.deserialized, deserialize_short_channel_id(packed_short_id)
+    ))
+  end
+
+  return result
+end
+
+function deserialize_short_ids(packed_short_ids)
+  local encoding_type = string.unpack(">I1", packed_short_ids:sub(1, 1))
+  local short_ids_payload = packed_short_ids:sub(2)
+
+  if encoding_type == 0 then
+    return decode_short_ids(short_ids_payload)
+  elseif encoding_type == 1 then
+    local decompressed = zlib.inflate()(short_ids_payload)
+    return decode_short_ids(decompressed)
+  else
+    error("Invalid encoding type")
+  end
+end
+
 return {
   Reader = Reader,
   OrderedDict = OrderedDict,
   encode_signature_der = encode_signature_der,
   convert_signature_der = convert_signature_der,
   deserialize_flags = deserialize_flags,
-  deserialize_short_channel_id = deserialize_short_channel_id
+  deserialize_short_channel_id = deserialize_short_channel_id,
+  deserialize_short_ids = deserialize_short_ids
 }
