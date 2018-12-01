@@ -249,6 +249,14 @@ local fields = {
       complete = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.complete.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.complete.deserialized", ftypes.UINT8)
+      },
+      first_blocknum = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.first_blocknum.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.first_blocknum.deserialized", ftypes.UINT32)
+      },
+      number_of_blocks = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.number_of_blocks.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.number_of_blocks.deserialized", ftypes.UINT32)
       }
     }
   }
