@@ -19,6 +19,23 @@ mkdir -p ~/.config/wireshark/plugins
 ln -s ~/.luarocks/share/lua/5.2/lightning-dissector/wireshark-plugin.lua ~/.config/wireshark/plugins/lightning-dissector.lua
 ```
 
+When a big BOLT message comes, lightning-dissector outputs a big message to Wireshark. (#25)    
+Therefore, you might have to apply these patches to Wireshark source code.
+```diff
+diff --git epan/proto.h epan/proto.h
+index afe8dae6e2..81e1e74a60 100644
+--- epan/proto.h
++++ epan/proto.h
+@@ -60,7 +60,7 @@ extern "C" {
+ WS_DLL_PUBLIC int hf_text_only;
+ 
+ /** the maximum length of a protocol field string representation */
+-#define ITEM_LABEL_LENGTH	240
++#define ITEM_LABEL_LENGTH	10000
+ 
+ #define ITEM_LABEL_UNKNOWN_STR	"Unknown"
+```
+
 ## Setup
 ### c-lightning
 ```bash
