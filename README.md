@@ -58,37 +58,10 @@ You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Key l
 
 ## Status
 ### Supported implementations
-Currently, lightning-dissector can decrypt messages sent from / received by
+Currently, lightning-dissector can decrypt messages sent from
+- c-lightning
 - eclair
 - ptarmigan
 
 If you are developer of some BOLT implementation, I need your help!  
 [You can make your BOLT implementation support lightning-dissector by dumping key log file, or writing a new SecretManager](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md).
-
-### Supported BOLT messages
-Currently, lightning-dissector can deserialize
-- init
-- ping
-- pong
-- error
-- channel_announcement
-- node_announcement
-- channel_update
-- node_announcement
-- open_channel
-- accept_channel
-- funding_created
-- funding_signed
-- funding_locked
-- shutdown
-- closing_signed
-- update_add_htlc
-- update_fulfill_htlc
-- update_fail_htlc
-- update_fail_malformed_htlc
-- commitment_signed
-- revoke_and_ack
-- update_fee
-
-I'm working on another messages.  
-Contributions by [writing deserializers for another messages](https://github.com/nayutaco/lightning-dissector/blob/master/CONTRIBUTING.md#add-support-for-another-message) are welcome.
