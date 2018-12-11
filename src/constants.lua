@@ -257,6 +257,14 @@ local fields = {
       number_of_blocks = {
         raw = ProtoField.new("Raw", "lightning.payload.deserialized.number_of_blocks.raw", ftypes.STRING),
         deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.number_of_blocks.deserialized", ftypes.UINT32)
+      },
+      first_timestamp = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.first_timestamp.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.first_timestamp.deserialized", ftypes.INT32)
+      },
+      timestamp_range = {
+        raw = ProtoField.new("Raw", "lightning.payload.deserialized.timestamp_range.raw", ftypes.STRING),
+        deserialized = ProtoField.new("Deserialized", "lightning.payload.deserialized.timestamp_range.deserialized", ftypes.INT32)
       }
     }
   }

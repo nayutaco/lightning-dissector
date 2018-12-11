@@ -58,6 +58,7 @@ build = {
     ["lightning-dissector.deserializers.reply-short-channel-ids-end"] = "src/deserializers/reply-short-channel-ids-end.lua",
     ["lightning-dissector.deserializers.query-channel-range"] = "src/deserializers/query-channel-range.lua",
     ["lightning-dissector.deserializers.reply-channel-range"] = "src/deserializers/reply-channel-range.lua",
+    ["lightning-dissector.deserializers.gossip-timestamp-filter"] = "src/deserializers/gossip-timestamp-filter.lua",
     ["lightning-dissector.utils"] = "src/utils.lua",
     ["plc52.bin"] = "plc/plc/bin.lua",
     ["plc52.chacha20"] = "plc/plc/chacha20.lua"

@@ -29,7 +29,8 @@ local deserializers = {
   require("lightning-dissector.deserializers.query-short-channel-ids"),
   require("lightning-dissector.deserializers.reply-short-channel-ids-end"),
   require("lightning-dissector.deserializers.query-channel-range"),
-  require("lightning-dissector.deserializers.reply-channel-range")
+  require("lightning-dissector.deserializers.reply-channel-range"),
+  require("lightning-dissector.deserializers.gossip-timestamp-filter")
 }
 
 local function find_deserializer_for(type)
