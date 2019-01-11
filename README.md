@@ -37,7 +37,7 @@ index afe8dae6e2..81e1e74a60 100644
 ```
 
 ## Setup
-### c-lightning
+### c-lightning (beta)
 ```bash
 git clone https://github.com/arowser/lightning -b dissector
 cd lightning
