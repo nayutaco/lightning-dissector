@@ -26,6 +26,7 @@ function deserialize(payload)
   local htlc_minimum_msat = UInt64.decode(packed_htlc_minimum_msat, false)
   local fee_base_msat = string.unpack(">I4", packed_fee_base_msat)
   local fee_proportional_millionths = string.unpack(">I4", packed_fee_proportional_millionths)
+  local message_flags = deserialize_flags(packed_message_flags, {"option_channel_htlc_max"})
 
   local result = OrderedDict:new(
     "signature", OrderedDict:new(
@@ -43,7 +44,7 @@ function deserialize(payload)
     ),
     "message_flags", OrderedDict:new(
       f.message_flags.raw, bin.stohex(packed_message_flags),
-      f.message_flags.deserialized, inspect(deserialize_flags(packed_message_flags, {"option_channel_htlc_max"}))
+      f.message_flags.deserialized, inspect(message_flags)
     ),
     "channel_flags", OrderedDict:new(
       f.channel_flags.raw, bin.stohex(packed_channel_flags),
@@ -67,11 +68,19 @@ function deserialize(payload)
     )
   )
 
+  local option_channel_htlc_max = false
+  for i = 1, #message_flags do
+    if message_flags[i] == "option_channel_htlc_max" then
+      option_channel_htlc_max = true
+      break
+    end
+  end
+
   if option_channel_htlc_max then
     local packed_htlc_maximum_msat = reader:read(8)
     local htlc_maximum_msat = UInt64.decode(packed_htlc_maximum_msat, false)
 
-    result.append("htlc_maximum_msat", OrderedDict:new(
+    result:append("htlc_maximum_msat", OrderedDict:new(
       f.htlc_maximum_msat.raw, bin.stohex(packed_htlc_maximum_msat),
       f.htlc_maximum_msat.deserialized, htlc_maximum_msat
     ))
