@@ -97,11 +97,16 @@ function protocol.dissector(buffer, pinfo, tree)
       analyzed_pdu:append("Secret", secret:display())
       analyzed_pdu:append("Length", payload_length.display())
       analyzed_pdu:append("Payload", payload.display())
+
+      -- needs refactoring
+      if payload.type then
+        pinfo.cols.info = payload.type
+      end
+
       offset = offset + whole_length
     end
 
     local subtree = tree:add(protocol, "Lightning Network")
-
     display(subtree, analyzed_pdu)
   end
 end

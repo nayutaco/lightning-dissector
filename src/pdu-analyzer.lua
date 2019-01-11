@@ -69,7 +69,7 @@ local function deserialize(packed_payload)
     result:append(key, value)
   end
 
-  return result
+  return result, deserializer.name
 end
 
 local function analyze_length(buffer, secret)
@@ -99,17 +99,19 @@ local function analyze_payload(buffer, secret)
   local packed_encrypted = buffer:raw(0, payload_length)
   local packed_mac = buffer:raw(payload_length, constants.lengths.payload_mac)
   local packed_decrypted = secret:decrypt(packed_encrypted, packed_mac)
+  local deserialized, type = deserialize(packed_decrypted)
 
   return {
     packed_encrypted = packed_encrypted,
     packed_mac = packed_mac,
     packed_decrypted = packed_decrypted,
+    type = type,
     display = function()
       return OrderedDict:new(
         constants.fields.payload.encrypted, bin.stohex(packed_encrypted),
         constants.fields.payload.mac, bin.stohex(packed_mac),
         constants.fields.payload.decrypted, bin.stohex(packed_decrypted),
-        "Deserialized", deserialize(packed_decrypted)
+        "Deserialized", deserialized
       )
     end
   }
