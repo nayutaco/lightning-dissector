@@ -74,8 +74,9 @@ export LIGHTNINGKEYLOGFILE=~/.cache/ptarmigan/keys.log
 You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Key log file` preference same. (~/.cache/ptarmigan/keys.log by default)
 
 ### lnd (beta)
+You have to start lnd at your $HOME.
 ```bash
-go get -d https://github.com/nakajo2011/lnd
+go get -d github.com/lightningnetwork/lnd
 cd $GOPATH/src/github.com/lightningnetwork/lnd
 git remote add nakajo2011 https://github.com/nakajo2011/lnd.git
 git fetch nakajo2011 dissector
@@ -87,6 +88,7 @@ make && make install
 ### Supported implementations
 Currently, lightning-dissector can decrypt messages sent from
 - c-lightning
+- lnd
 - eclair
 - ptarmigan
 
