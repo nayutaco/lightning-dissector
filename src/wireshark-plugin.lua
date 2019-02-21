@@ -22,7 +22,7 @@ protocol.fields = constants.fields_array
 protocol.prefs.key_log_paths = Pref.string("Key log file", "~/.cache/ptarmigan/keys.log")
 protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/eclair.log")
 protocol.prefs.clightning_key_paths = Pref.string("C-Lightning log file", "~/.lightning/keys.log")
-protocol.prefs.lnd_key_paths = Pref.string("Lnd log file", "~/lndkey.log")
+protocol.prefs.lnd_key_paths = Pref.string("Lnd log file", "~/.lnd/keys.log")
 protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
 
 local function display(tree, analyzed_pdu)
