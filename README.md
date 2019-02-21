@@ -76,8 +76,10 @@ You should set `$LIGHTNINGKEYLOGFILE` value and `Protocols -> LIGHTNING -> Key l
 ### lnd (beta)
 ```bash
 go get -d https://github.com/nakajo2011/lnd
-cd $GOPATH/src/github.com/nakajo2011/lnd
-git checkout dissector
+cd $GOPATH/src/github.com/lightningnetwork/lnd
+git remote add nakajo2011 https://github.com/nakajo2011/lnd.git
+git fetch nakajo2011 dissector
+git checkout nakajo2011/dissector
 make && make install
 ```
 
