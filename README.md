@@ -37,6 +37,17 @@ index afe8dae6e2..81e1e74a60 100644
 ```
 
 ## Setup
+
+### Setup TCP ports (optional)
+
+On Bitcoin mainnet or testnet, your lightning node will always bind to TCP port 9735.
+In that case you don't need to configure anything, by default the dissector will inspect port 9735.
+
+However, if you're running some tests on a local network and have nodes binding to other ports than 9735,
+you need to configure the dissector to inspect those ports.
+
+Go to `Edit Menu -> Preferences -> Protocols -> LIGHTNING` to change the ports inspected by the dissector.
+
 ### c-lightning (beta)
 ```bash
 git clone https://github.com/arowser/lightning -b dissector
