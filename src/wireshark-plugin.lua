@@ -19,11 +19,13 @@ local OrderedDict = require("lightning-dissector.utils").OrderedDict
 
 local protocol = Proto("LIGHTNING", "Lightning Network")
 protocol.fields = constants.fields_array
+protocol.prefs.ports = Pref.string("TCP ports", "9735", "Ports used by your lightning node(s).")
+protocol.prefs.note1 = Pref.statictext("You can specify multiple tcp ports by using : as separator.")
 protocol.prefs.key_log_paths = Pref.string("Key log file", "~/.cache/ptarmigan/keys.log")
 protocol.prefs.eclair_key_paths = Pref.string("Eclair log file", "~/.eclair/eclair.log")
 protocol.prefs.clightning_key_paths = Pref.string("C-Lightning log file", "~/.lightning/keys.log")
 protocol.prefs.lnd_key_paths = Pref.string("Lnd log file", "~/.lnd/keys.log")
-protocol.prefs.note1 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
+protocol.prefs.note2 = Pref.statictext("You can specify multiple files by using : as separator, just like $PATH.")
 
 local function display(tree, analyzed_pdu)
   for key, value in pairs(analyzed_pdu) do
@@ -39,6 +41,11 @@ end
 local secret_cache
 
 function protocol.init()
+  for port in protocol.prefs.ports:gmatch("%d+") do
+    info("Registering lightning port:", port)
+    DissectorTable.get("tcp.port"):add(tonumber(port), protocol)
+  end
+
   local secret_factories = {}
 
   for key_log_path in protocol.prefs.key_log_paths:gmatch("[^:]+") do
@@ -116,5 +123,3 @@ function protocol.dissector(buffer, pinfo, tree)
     display(subtree, analyzed_pdu)
   end
 end
-
-DissectorTable.get("tcp.port"):add(9735, protocol)
