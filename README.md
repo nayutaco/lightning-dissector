@@ -64,14 +64,25 @@ make install  # optional
 
 ### Eclair
 
-Set loglevel to DEBUG.  
-lightning-dissector searches debug log for decryption key.
+Eclair uses [logback](https://logback.qos.ch/) to configure its logs.
+Logback uses a configuration file that can be updated while the node is running.
+The default configuration can be found in `eclair-node/src/main/resources/logback.xml`.
 
-```bash
-sed -i 's/<root level="INFO">/<root level="DEBUG">/' eclair-node/src/main/resources/logback.xml
+To dump encryption keys for the lightning-dissector:
+
+- copy `logback.xml` to your node's data directory (by default ~/.eclair)
+- update the `logger` section named `keylog`: set its `level` to `DEBUG` (instead of `OFF`)
+- run your node with the `-Dlogback.configurationFile` option pointing to your modified `logback.xml` (for example `-Dlogback.configurationFile=/home/lightning-master/.eclair/logback.xml`)
+
+The `keylog` section of your `logback.xml` file should look like:
+
+```xml
+<logger level="DEBUG" name="keylog" additivity="false">
+  <appender-ref ref="KEYLOG"/>
+</logger>
 ```
 
-You can set location for the debug log by `Edit Menu -> Preferences -> Protocols -> LIGHTNING`. (~/.eclair/eclair.log by default)
+You can then configure lightning-dissector's location for the key log by `Protocols -> LIGHTNING -> Eclair log file` (~/.eclair/keys.log by default).
 
 ### Ptarmigan
 
